@@ -1,0 +1,4 @@
+github.com/reMarkable/linux/zero-gravitas_4.9 = kernel default
+
+
+https://ipfs.eeems.website/ipfs/Qmdkdeh3bodwDLM9YvPrMoAi6dFYDDCodAnHvjG5voZxiC = toolchain
