@@ -1,0 +1,22 @@
+# Include configuration files
+include config/*.yaml
+include config/presets/*.yaml
+
+# Include resources
+recursive-include resources *
+
+# Include documentation
+include docs/*.md
+
+# Include Docker files
+include docker/toolchain/Dockerfile
+include docker/build_image.sh
+
+# Include scripts
+include *.sh
+include bin/parabola-rm-builder
+
+# Include license and readme
+include LICENSE
+include README.md
+include requirements.txt

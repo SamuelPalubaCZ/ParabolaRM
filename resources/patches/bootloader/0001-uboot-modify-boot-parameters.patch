@@ -1,0 +1,100 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sat, 30 Mar 2025 00:00:00 +0000
+Subject: [PATCH] include/configs: Modify boot parameters for Parabola RM
+
+This patch modifies the boot parameters in U-Boot to boot from the
+Parabola RM partition layout. It removes the fallback boot options
+and simplifies the boot process.
+
+Signed-off-by: Your Name <your.email@example.com>
+---
+ include/configs/zero-gravitas.h | 41 ++++++++-----------------------
+ 1 file changed, 10 insertions(+), 31 deletions(-)
+
+diff --git a/include/configs/zero-gravitas.h b/include/configs/zero-gravitas.h
+index 074f171422..2a64e3651c 100644
+--- a/include/configs/zero-gravitas.h
++++ b/include/configs/zero-gravitas.h
+@@ -71,12 +71,10 @@
+         "splashimage=0x80000000\0" \
+         "splashpos=m,m\0" \
+         "active_partition=2\0" \
+-       "fallback_partition=3\0" \
+         "bootlimit=1\0" \
+         "por=undefined\0" \
+-       "mmcargs=setenv bootargs console=${console},${baudrate} " \
+-                       "systemd.crash_reboot=true memtest " \
+-                       "root=/dev/mmcblk1p${active_partition} rootwait rootfstype=ext4 quiet rw por=${por};\0" \
++       "mmcargs=setenv bootargs console=${console},${baudrate} " \
++                       "root=/dev/mmcblk1p2 rootwait rootfstype=ext4 rw por=${por};\0" \
+         "loadimage=ext4load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+         "loadfdt=ext4load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+         "mmcboot=echo Booting from mmc ...; " \
+@@ -89,41 +87,13 @@
+                                         "echo WARN: Cannot load the DT; " \
+                                 "fi; " \
+                         "fi; " \
+-               "fi;\0" \
+-       "memboot=echo Booting from memory...; " \
+-               "setenv bootargs console=${console},${baudrate} " \
+-               "g_mass_storage.stall=0 g_mass_storage.removable=1 " \
+-               "g_mass_storage.idVendor=0x066F g_mass_storage.idProduct=0x37FF "\
+-               "g_mass_storage.iSerialNumber=\"\" rdinit=/linuxrc; "\
+-               "bootz ${loadaddr} ${initrd} ${fdt_addr};\0" \
+-       "altbootcmd=echo Running from fallback root...; " \
+-               "run memboot; " \
+-               "if test ${bootcount} -gt 10; then " \
+-                       "echo WARN: Failed too much, resetting bootcount and turning off; " \
+-                       "setenv bootcount 0; " \
+-                       "saveenv; " \
+-                       "poweroff; " \
+-               "fi; " \
+-               "setenv mmcpart ${fallback_partition}; " \
+-               "setenv bootargs console=${console},${baudrate} " \
+-                               "root=/dev/mmcblk1p${fallback_partition} rootwait rootfstype=ext4 quiet rw " \
+-                               "systemd.log_level=debug systemd.log_target=kmsg memtest " \
+-                               "log_buf_len=1M printk.devkmsg systemd.journald.forward_to_console=1; " \
+-               "run mmcboot;\0" \
++               "fi;\0"
+ 
+ /* Always try to boot from memory first, in case of USB download mode */
+ #define CONFIG_BOOTCOMMAND \
+-       "if test ! -e mmc 1:1 uboot.env; then " \
+-               "saveenv; " \
+-       "fi; " \
+-       "run memboot; " \
+         "run mmcargs; " \
+         "setenv mmcpart ${active_partition}; " \
+-       "run mmcboot; " \
+-       "echo WARN: unable to boot from either RAM or eMMC; " \
+-       "setenv upgrade_available 1; " \
+-       "saveenv; " \
+-       "reset; "
++       "run mmcboot; "
+ 
+ #ifdef CONFIG_BOOTDELAY
+ #undef CONFIG_BOOTDELAY
+@@ -157,18 +127,8 @@
+ /* Environment organization */
+ #define CONFIG_ENV_SIZE                        SZ_8K
+ 
+-#define CONFIG_ENV_IS_IN_FAT
+-/*#define CONFIG_ENV_IS_NOWHERE*/
+-
+-#ifdef CONFIG_ENV_IS_IN_FAT
+-#define CONFIG_BOOTCOUNT_LIMIT
+-#define CONFIG_BOOTCOUNT_ENV
+-
+-#define FAT_ENV_INTERFACE "mmc"
+-#define FAT_ENV_DEVICE_AND_PART "1:1"
+-#define CONFIG_FAT_WRITE
+-#define FAT_ENV_FILE "uboot.env"
+-#endif
++/*#define CONFIG_ENV_IS_IN_FAT*/
++#define CONFIG_ENV_IS_NOWHERE
+ 
+ #ifdef CONFIG_CMD_SF
+ #define CONFIG_MXC_SPI
+-- 
+2.40.1

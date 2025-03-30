@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sat, 30 Mar 2025 00:00:00 +0000
+Subject: [PATCH] drivers/video/fbdev/mxc: Enable partial refresh in EPDC driver
+
+This patch enables partial refreshing with deferred-IO automatic updates
+in the EPDC framebuffer driver. It also increases the interval at which
+the framebuffer's memory region is checked for better performance.
+REAGL waveforms are enabled to minimize ghosting.
+
+Signed-off-by: Your Name <your.email@example.com>
+---
+ drivers/video/fbdev/mxc/mxc_epdc_fb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/video/fbdev/mxc/mxc_epdc_fb.c b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+index 0f762808dd62..1c414c65cc59 100644
+--- a/drivers/video/fbdev/mxc/mxc_epdc_fb.c
++++ b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+@@ -3502,10 +3502,10 @@ static void mxc_epdc_fb_update_pages(struct mxc_epdc_fb_data *fb_data,
+         update.update_region.top = y1;
+         update.update_region.height = y2 - y1;
+         update.waveform_mode = WAVEFORM_MODE_AUTO;
+-       update.update_mode = UPDATE_MODE_FULL;
++       update.update_mode = UPDATE_MODE_PARTIAL;
+         update.update_marker = 0;
+         update.temp = TEMP_USE_AMBIENT;
+-       update.flags = 0;
++       update.flags = EPDC_FLAG_USE_REGAL;
+ 
+         mxc_epdc_fb_send_update(&update, &fb_data->info);
+ }
+@@ -3700,7 +3700,7 @@ static struct fb_ops mxc_epdc_fb_ops = {
+ };
+ 
+ static struct fb_deferred_io mxc_epdc_fb_defio = {
+-       .delay = HZ,
++       .delay = HZ / 30,
+        .deferred_io = mxc_epdc_fb_deferred_io,
+ };
+-- 
+2.40.1

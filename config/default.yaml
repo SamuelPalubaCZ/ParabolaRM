@@ -1,0 +1,228 @@
+# Parabola RM Builder - Default Configuration
+
+# Cross-Compilation Environment Configuration
+cross_compilation:
+  # Environment type: 'container' or 'direct'
+  environment_type: container
+  
+  # Toolchain version (specific version or 'latest')
+  toolchain_version: latest
+  
+  # Container configuration (used when environment_type is 'container')
+  container:
+    # Base image for the container
+    base_image: debian:bullseye
+    
+    # Resource limits
+    resource_limits:
+      cpu: 4
+      memory: 4g
+    
+    # Volume mounts (host_path:container_path)
+    volume_mounts:
+      - source:/workspaces/source
+      - output:/workspaces/output
+    
+  # Direct toolchain configuration (used when environment_type is 'direct')
+  direct:
+    # Installation path for the toolchain
+    install_path: ~/.parabola-rm-builder/toolchain
+    
+    # Whether to use system package manager to install dependencies
+    use_system_package_manager: true
+  
+  # Build configuration
+  build:
+    # Number of parallel jobs for compilation
+    parallel_jobs: 4
+    
+    # Enable compiler cache
+    use_ccache: true
+    
+    # Cache directory
+    cache_dir: ~/.parabola-rm-builder/cache
+
+# Hardware Configuration
+hardware:
+  # Tablet model: 'rm1' or 'rm2'
+  tablet_model: rm1
+  
+  # Storage configuration
+  storage:
+    # Whether to use external storage
+    use_external_storage: false
+
+# Partition Configuration
+partition:
+  # Partition layout
+  layout:
+    # FAT partition size in MiB
+    fat_size: 20
+    
+    # System partition size in GiB
+    system_size: 2
+    
+    # Home partition (remaining space if set to 0)
+    home_size: 0
+  
+  # Filesystem options
+  filesystem:
+    # Filesystem types
+    fat_type: vfat
+    system_type: ext4
+    home_type: ext4
+    
+    # Filesystem parameters for ext4
+    ext4_params:
+      journal_size: 4
+      block_size: 1024
+      inode_size: 128
+      inode_ratio: 4096
+
+# Bootloader Configuration
+bootloader:
+  # Boot parameters
+  boot_params:
+    # Console settings
+    console: ttymxc0
+    baudrate: 115200
+    
+    # Root device
+    root_device: /dev/mmcblk1p2
+    
+    # Additional kernel parameters
+    additional_params: "rootwait rootfstype=ext4 rw"
+  
+  # Splash screen
+  splash_screen:
+    # Whether to use a custom splash screen
+    use_custom: false
+    
+    # Path to custom splash image (if use_custom is true)
+    custom_path: ""
+
+# Kernel Configuration
+kernel:
+  # Driver options
+  drivers:
+    # EPDC driver settings
+    epdc:
+      # Enable automatic partial refreshing
+      auto_partial_refresh: true
+      
+      # Refresh interval in Hz (higher values = more frequent updates)
+      refresh_interval: 30
+      
+      # Enable REAGL waveforms to minimize ghosting
+      enable_reagl: true
+    
+    # USB communication options
+    usb:
+      # Enable USB ACM for serial communication
+      enable_acm: true
+      
+      # Enable USB CDC composite for network
+      enable_cdc_composite: true
+  
+  # Hardware support
+  hardware_support:
+    # Whether to include Wi-Fi support (requires proprietary firmware)
+    wifi_support: false
+    
+    # Power management options
+    power_management: true
+
+# System Configuration
+system:
+  # Network settings
+  network:
+    # USB networking
+    usb_networking:
+      # Enable USB networking
+      enable: true
+      
+      # Static IP address for the tablet
+      ip_address: 10.11.99.1
+      
+      # Network mask
+      netmask: 255.255.255.0
+    
+    # DHCP server configuration
+    dhcp_server:
+      # Enable DHCP server
+      enable: true
+      
+      # DHCP range
+      range_start: 10.11.99.2
+      range_end: 10.11.99.253
+      
+      # Lease time in minutes
+      lease_time: 10
+  
+  # System services
+  services:
+    # Auto-start services
+    auto_start:
+      - systemd-networkd
+      - dnsmasq
+    
+    # Shutdown handling
+    shutdown:
+      # Enable graceful shutdown
+      enable_graceful_shutdown: true
+      
+      # Show splash screen on shutdown
+      show_splash_on_shutdown: true
+
+# Desktop Environment Configuration
+desktop:
+  # Environment selection: 'xfce', 'lxde', 'none'
+  environment: xfce
+  
+  # UI customization
+  ui:
+    # Theme selection
+    theme: High Contrast
+    
+    # Icon theme
+    icon_theme: High Contrast
+    
+    # Font settings
+    font:
+      # Default font
+      default_font: System-ui Regular
+      
+      # Disable anti-aliasing
+      disable_antialiasing: true
+      
+      # Custom DPI scaling
+      custom_dpi: false
+    
+    # E-paper optimizations
+    epaper_optimizations:
+      # Disable overlay scrolling
+      disable_overlay_scrolling: true
+      
+      # Disable button images
+      disable_button_images: true
+      
+      # Disable menu images
+      disable_menu_images: true
+      
+      # Disable shadows
+      disable_shadows: true
+  
+  # Input methods
+  input:
+    # Virtual keyboard
+    virtual_keyboard:
+      # Enable virtual keyboard
+      enable: true
+      
+      # Keyboard type: 'onboard', 'other'
+      type: onboard
+    
+    # Stylus configuration
+    stylus:
+      # Enable stylus
+      enable: true
