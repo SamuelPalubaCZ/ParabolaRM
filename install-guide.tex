@@ -1,0 +1,2175 @@
+\documentclass{memoir}
+\usepackage{xcolor,color,graphicx}
+\usepackage[english]{babel}
+\usepackage{afterpage}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{palatino}
+\usepackage{minted}
+\usepackage{dirtree}
+
+\definecolor{ared}{rgb}{.647,.129,.149}
+\definecolor{parapurp}{HTML}{636ECB}
+\definecolor{linkblue}{HTML}{AE6ACD}
+
+\usepackage[]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  allcolors={linkblue},
+  linkbordercolor={white},
+  hypertexnames=false,
+  pdftitle={Parabola on reMarkable: A Guide},
+  pdfauthor={Davis Remmel},
+  pdfsubject={Installation Manual},
+  pdfkeywords={remarkable, tablet, manual, parabola, guide, linux, gnu, gnu/linux, arm, install},
+  bookmarksnumbered=false,
+  bookmarksopen=true,
+  bookmarksopenlevel=1,
+  pdfstartview=,
+  pdfpagemode=UseOutlines
+}
+
+\renewcommand\colorchapnum{\color{parapurp}}
+\renewcommand\colorchaptitle{\color{parapurp}}
+\chapterstyle{pedersen}
+
+\newcommand*{\titleTH}{\begingroup% T&H Typography
+  \thispagestyle{empty}
+  \raggedleft
+  \vspace*{\baselineskip}
+  {\Large Davis Remmel}\\[0.167\textheight]
+  {\textcolor{parapurp}{\Huge \textit{Parabola on reMarkable}}}\\[\baselineskip]
+  {\small A Guide}\par
+  \vfill{\Large Installation Manual}\par
+  \vspace*{3\baselineskip}
+  \endgroup}
+
+\usepackage{textpos}
+
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
+\usepackage{wallpaper}
+\CenterWallPaper{1}{images/background}
+
+
+\begin{document}
+\footnotesinmargin
+\pagenumbering{roman}
+
+%% \begin{textblock}{0.25}[0,0](-3.25,1.35)
+%%     \textcolor{parapurp}{\rule{0.25cm}{5cm}}
+%% \end{textblock}
+\titleTH
+\newpage
+\ClearWallPaper
+
+% Copyright Page %/
+\thispagestyle{empty}
+
+\mbox{}
+
+\vfill
+
+\includegraphics[width=2cm]{images/cc-by-sa.png}
+\vspace{0.5cm}
+
+\small
+\mbox{Parabola on reMarkable: A Guide}
+
+\mbox{September 3, 2020}
+
+\vspace{0.5cm}
+
+\mbox{Copyright \textcopyright{} 2020 Davis Remmel.}
+
+\mbox{This work is licensed under a \href{https://creativecommons.org/licenses/by-sa/4.0/legalcode}{Creative Commons Attribution-ShareAlike 4.0 license}.}
+
+\mbox{\href{http://www.davisr.me/projects/parabola-rm/}{http://www.davisr.me/projects/parabola-rm/}}
+
+\vspace{0.5cm}
+
+\mbox{reMarkable\textregistered{} is a registered trademark of reMarkable AS. Parabola-rM is not affiliated}
+
+\mbox{with, or endorsed by, reMarkable AS. The use of ``reMarkable'' in this work refers to the}
+
+\mbox{company's e-paper tablet product(s).}
+
+\newpage
+
+
+\begingroup
+\hypersetup{linkcolor=.}
+\tableofcontents
+\endgroup
+\newpage
+
+\thispagestyle{empty}\mbox{}\newpage
+
+
+\renewcommand{\thechapter}{\roman{chapter}}
+\chapter{Preface}
+
+You may have seen my work in the reMarkable tablet hacking community. I’m the one who \href{http://www.davisr.me/projects/remarkable-microsd/}{added a microSD card to the tablet}, then later installed a \href{https://old.reddit.com/r/RemarkableTablet/comments/gkktxy/desktop_linux_on_remarkable_xournal_doom_and_more/}{desktop GNU/Linux environment}. My efforts focus on making the device usable in a general computing context.
+
+This manual will guide a reMarkable owner through removing its proprietary software, compiling a bootloader and kernel, installing the \href{https://www.parabola.nu/}{Parabola GNU/Linux-libre} operating system, and configuring a desktop environment. A finished OS distribution, named \textit{Parabola-rM}, is suitable for immediate installation and available at \href{http://www.davisr.me/projects/parabola-rm/}{the project's official website}.
+
+Parabola-rM is \textit{free}, not in price, but in liberty. Under the terms of its license users hold the freedom to share this program with others, or even re-sell it. Anyone can make improvements because the source code is freely available. This viral licensing forms a web of non-proprietary software, leading the world toward transparency and trust, precipitating software \textit{rights}.
+
+If you are a privacy-minded individual who wants to support independent software development that represents the needs of the tablet's community, please buy a copy of this guide and Parabola-rM. The funds generated will support me through writing a non-proprietary handwriting recognition engine, eventually authoring ``magic paper'' software influenced by Dynabook.
+
+I would greatly appreciate your purchase; thank you.
+
+\vspace{1.5cm}
+
+\rightline{Davis Remmel}
+\rightline{Maintainer}
+
+
+\chapter{Support Information}
+This manual and the complete Parabola-rM image are available online from the \href{http://www.davisr.me/projects/parabola-rm/}{official project page}. This work is \textit{not covered by any warranty}. Failure to perform these operations properly may result in a broken tablet, and performing these operations are likely to invalidate the manufacturer's warranty.
+
+\section{General Support}
+
+Customers who purchase Parabola-rM from its original maintainer are entitled to some email support. The maintainer will try his best to satisfy each customer. Please write an email using the following header fields. Please reference the PayPal transaction ID in the message body.
+
+\vspace{0.5cm}
+\begin{tabular}{rl}
+To:& Davis Remmel \textless d@visr.me\textgreater \\
+Subject:& Parabola-rM Support
+\end{tabular}
+
+
+\section{Getting Updates}
+
+Updates to Parabola-rM are announced via email to eligible customers. People who buy Parabola-rM from the maintainer will receive updates for six months. The OS will never stop working; updates provide improvements, but a user can never be locked out of the software they own.
+
+Recipients may unsubscribe from update announcements by sending an email to the maintainer using the following header fields. Please reference the PayPal transaction ID in the message body.
+
+\vspace{0.5cm}
+\begin{tabular}{rl}
+To:& Davis Remmel \textless d@visr.me\textgreater \\
+Subject:& Unsubscribe from Parabola-rM Update Announcements
+\end{tabular}
+
+
+\section{Bug Reporting}
+
+For advanced users who can identify a fault with the OS, please submit a bug report via email with the following header fields. In the message body, please include: (a) a description of what is seen when using the OS, (b) what is expected to be seen when using the OS, (c) steps to reproduce the problem, and (d) information about the operating system and hardware.
+
+\vspace{0.5cm}
+\begin{tabular}{rl}
+To:& Davis Remmel \textless d@visr.me\textgreater \\
+Subject:& Parabola-rM Bug: \textit{Short description of problem}
+\end{tabular}
+
+
+
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\arabic{chapter}}
+\chapter{Introduction}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+This guide expects a level of familiarity from the user about using GNU/Linux utilities such as compiling software, partitioning a disk, and configuring system components. This chapter will offer context and outline the process used in this guide.
+
+\section{Compatibility}
+To install this OS requires a PC running one of the following operating systems. It is strongly recommended to use a Unix-like OS due to the use of composite USB devices, which are unsupported in Windows.
+
+\begin{itemize}
+\item{FreeBSD 12.1}
+\item{GNU/Linux (various)}
+\item{Apple macOS 10.13}
+\item{Microsoft Windows 10}
+\end{itemize}
+
+The following reMarkable models have been tested with Parabola-rM.
+
+\begin{itemize}
+\item{RM100 (reMarkable 1)}
+\end{itemize}
+
+
+\section{Hardware summary}
+The reMarkable tablet is a portable computer disguised as a digital notebook. Its design is based on the NXP (Freescale) i.MX6 System-on-Chip (SoC) platform.
+
+\vspace{0.5cm}
+\begin{tabular}{ r | l }
+  Processor & i.MX6SL (SoloLite) 800 MHz ARMv7 processor \\
+  Memory & 510 MB \\
+  Storage & 8 GB eMMC \\
+  Communication & Micro-USB \\
+  & Wi-Fi (with proprietary firmware)\\
+  Display & 10.3 inch (diagonal), electrophoretic, 16 shades of gray \\
+  Input & Electromagnetic resonance (EMR) digitizer with stylus \\
+  & Capacitive touch overlay \\
+  & Four facial buttons (Power, Left, Center, Right)
+\end{tabular}
+
+
+
+\section{Boot process summary}
+The SoC may boot from multiple sources depending on its initial state. If only the power button is pressed, the SoC will look for a bootloader on a protected eMMC partition (mounted by the kernel as \textit{/dev/mmcblk1boot0}). However, if the user holds the center facial button while the power button is pressed, the SoC will instead enter recovery mode. In this mode, the SoC will await a payload to be delivered over USB with the \textit{imx\_usb} utility. Regardless of how the bootloader gets into memory, the sequence below is followed.
+
+\begin{enumerate}
+\item{The SoC ROM loads and executes the bootloader}
+\item{The bootloader loads and executes the kernel}
+  \item{The kernel mounts the filesystem and starts the init program as PID 1}
+\end{enumerate}
+
+\section{Installing the Parabola-rM image}
+One may \href{http://www.davisr.me/projects/parabola-rm/}{purchase} the finished Parabola-rM image from the project's maintainer. This bundle contains files named ``mmcblk1boot0'' and ``mmcblk1'' which may be directly copied over the eMMC block devices. The bundle also contains compiled versions of \textit{imx\_usb} (64-bit) for FreeBSD 12.1, GNU/Linux, and Windows 10. The rest of this document describes how to create these images from-scratch.
+
+\section{Installation procedure summary}
+The procedure to install Parabola is similar to its boot process. First, one must configure and compile the bootloader. Then, one must configure and compile the kernel. They must next partition the eMMC and copy the bootloader, kernel, and Parabola root filesystem (rootfs). Lastly, if one wants to use software designed for a desktop PC they must install a desktop environment.
+
+\section{Compiling imx\_usb}
+If a user cannot compile and use \textit{imx\_usb}, they probably shouldn't follow the proceeding chapters. The reMarkable company \href{https://github.com/remarkable/imx_usb_loader}{offers their version of this utility online} and includes a bootable initramfs. This initramfs may be used as a rescue utility should anything go wrong.
+
+To load the initramfs, one must place their tablet into recovery mode. While the tablet is turned off, hold the middle facial button while pressing the power button; continue holding the middle button for five seconds while releasing the power button. The tablet should register on the PC as a USB device, ``Freescale SemiConductor Inc SE Blank MEGREZ.''
+
+Execute the \textit{imx\_usb} utility. The tablet will load the initramfs and boot, then appear as a USB Ethernet device and act as a DHCP and SSH server. If the PC is configured to request a DHCP lease on this network interface, it will automatically be assigned an IP address. The tablet appears at \textit{10.11.99.1}.
+
+\section{Taking and restoring a backup}
+SSH into the tablet as \textit{root} and duplicate the following block devices to the local disk. Be sure to verify the checksums of these devices match.
+
+\begin{itemize}
+\item{/dev/mmcblk1boot0}
+\item{/dev/mmcblk1boot1}
+\item{/dev/mmcblk1}
+\end{itemize}
+
+Should anything go wrong, these copies may be used to restore the tablet in its original condition. It is wise to test this right away. Place the protected eMMC partitions in read-write mode with \textit{echo 0 > /sys/block/mmcblk1bootN/force\_ro}, then \textit{dd if=/dev/zero of=/dev/mmcblk1bootN}. Read them back out and verify they contain null data. Overwrite \textit{/dev/mmcblk1} with zeros and verify it as well. Then, restore the backups from the PC, verify the checksums match, and place the protected partitions into read-only mode with \textit{echo 1 > /sys/block/mmcblk1bootN/force\_ro}. Reboot the tablet and pray that it comes back.
+
+\section{Compiling code for ARM}
+In order to compile code for the reMarkable, it is recommended to use \href{https://remarkable.engineering/deploy/sdk/}{the toolchain} provided by the reMarkable company. The easiest way to get started is to create a GNU/Linux virtual machine with Trisquel or Ubuntu, and run the \textit{poky-2.1.3.sh} script. This will install all the necessary compilers and libraries. When one wants to compile something, like U-Boot or Linux, they can simply source the toolchain's \textit{environment-setup...gnueabi} file in their shell and the reMarkable's architecture will be targeted.
+
+
+
+
+
+\chapter{U-Boot Bootloader}
+%% Overview
+The bootloader is loaded by the SoC ROM, and subsequently loads and executes the kernel. The reMarkable company \href{https://github.com/remarkable/uboot/}{publishes their code} for U-Boot. Download it to follow along with this chapter, using the \textit{master} branch.
+
+In a later section, the partition map will be discussed in-depth. However, it is necessary to provide brief context for this chapter. The eMMC will have three partitions.
+
+\begin{enumerate}
+\item{FAT, 20 MiB, U-Boot support files}
+\item{ext4, 2 GiB, Parabola system files}
+\item{ext4, 5.3 GiB, mounting \textit{/home}}
+\end{enumerate}
+
+\section{Configuration}
+This section will discuss how to modify U-Boot directly, to supply new kernel boot arguments matching our disk layout\footnote{The maintainer is working on getting reMarkable support upstreamed in the official U-Boot and Parabola repositories, which involves using an extlinux-style configuration file instead of hardcoding the kernel arguments.}.
+U-Boot passes the kernel boot arguments, so it is necessary to adjust them.
+
+Located within \textit{include/configs/zero-gravitas.h} is the boot configuration. Change the root filesystem to \textit{/dev/mmcblk1p2}. Remove the boot-from-memory and boot-from-fallback parts of the \textit{mmcboot} command, since these are no longer necessary. Finally, to prevent U-Boot from reading/saving these environment variables to disk, define \textit{CONFIG\_ENV\_IS\_NOWHERE}. These changes are summarized in Figure \ref{fig:mmcargs}, but a full diff listing is available in the \nameref{ch:ubootdiff} appendix.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{c}
+"mmcargs=setenv bootargs console=${console},${baudrate} " \
+     "root=/dev/mmcblk1p2 rootwait rootfstype=ext4 rw por=${por};\0" \
+/* ... */
+"mmcboot=echo Booting from mmc ...; " \
+    "mmc dev ${mmcdev}; " \
+    "if mmc rescan; then " \
+        "if run loadimage; then " \
+            "if run loadfdt; then " \
+                "bootz ${loadaddr} - ${fdt_addr}; " \
+            "else " \
+                "echo WARN: Cannot load the DT; " \
+            "fi; " \
+        "fi; " \
+    "fi;\0"
+/* ... */
+/* #define CONFIG_ENV_IS_IN_FAT */
+#define CONFIG_ENV_IS_NOWHERE
+\end{minted}
+\caption{Replace \textit{mmcargs} and \textit{mmcboot} with new parameters.}
+\label{fig:mmcargs}
+\end{figure}
+
+
+
+
+\section{Compilation}
+Compile U-Boot by running \textit{make} in its source directory. It will produce the \textit{u-boot.imx} bootloader binary, which we will later flash to the eMMC's \textit{boot0} protected partition.
+
+
+
+
+\chapter{Linux Kernel}
+\label{ch:linux}
+%% Overview
+The Linux kernel is responsible for providing abstraction between the userland programs and the hardware. The reMarkable company \href{https://github.com/remarkable/linux}{publishes their kernel online}, and one must download it to proceed with this chapter. Check out the Linux 4.9 version, available in the \textit{lars/zero-gravitas\_4.9} branch.
+
+\section{Removing proprietary blobs}
+The kernel directory tree contains nonfree software, so that must be removed to respect the user's freedom. This is achieved with help from the \href{https://linux-libre.fsfla.org/pub/linux-libre/releases/}{Linux-libre deblob scripts}.
+
+Purge the \textit{firmware} directory of all files, except for \textit{epdc\_ES103CS1.ihex} which is the EPDC (electrophoretic display controller) waveform file. This is a set of voltages, temperatures, and timings---non-executable data---so it is freedom-respecting. An easy way to achieve this is with \textit{find . -type f | grep -v 'epdc\_ES103CS1.fw.ihex' | grep -i \\'\textbackslash.hex\textbackslash|\textbackslash.ihex\textbackslash|\textbackslash.asm\textbackslash|\textbackslash.H16\textbackslash|\textbackslash.S' | xargs rm}.
+
+From the Linux-libre project, run the deblob-check script inside the Linux base directory. This will take a while to complete. It will likely trigger on several unimportant files that hold cryptographic lookup tables. These are fine, but do inspect that it does not trigger on any proprietary code.
+
+\section{EPDC framebuffer driver}
+In the kernel provided by the reMarkable company there is a problem with the EPDC framebuffer driver: when making lots of updates, especially in Automatic Mode, it is possible for the EPDC controller to lock up but continue to apply a voltage to the panel. This often happens when one region is updated multiple times very quickly. This condition is called a \textit{TCE underrun}. The TCE is the Timing Control Engine, part of the EPDC, and pushes waveforms to the TFT panel on each scan cycle. TCE underruns can damage the electrophoretic display.
+
+Max Tsai, of NXP, has published two patches that mitigate this condition. The first patch, ``\href{https://community.nxp.com/docs/DOC-343599}{EPDC QoS},'' listed in Appendix \ref{patchepdcqos}, removes latency for updates by increasing priority to the DDR (memory) controller. This prevents an underrun condition from happening in the first place. The second patch, ``\href{https://community.nxp.com/docs/DOC-343787}{EPDC SW Reset},'' is listed in Appendix \ref{patchepdcreset}. If an underrun condition occurs, the driver will drop its queue and re-initialize the panel. To the user, the screen will appear to pause for a moment, which is better than having a screen with a permanent disability.
+
+Lastly, the framebuffer driver must be patched to enable partial refreshing with deferred-IO automatic updates\footnote{It is possible to force monochrome and dithering in the ...update\_pages() routine.}, and to increase the interval at which the framebuffer's memory region is checked. This can be seen in Figure \ref{fig:epdcautopart}. REAGL waveforms are enabled to minimize ghosting.
+
+These patches should be applied to the kernel in the framebuffer driver, located in the \textit{drivers/video/fbdev/mxc} directory\footnote{If working from the 4.9 kernel, the \nameref{patchepdcqos} has been applied by the manufacturer. It is noted here as a historical reference.}.
+
+\pagebreak
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+diff --git a/drivers/video/fbdev/mxc/mxc_epdc_fb.c b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+index 0f762808dd62..1c414c65cc59 100644
+--- a/drivers/video/fbdev/mxc/mxc_epdc_fb.c
++++ b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+@@ -3502,10 +3502,10 @@ static void mxc_epdc_fb_update_pages(struct mxc_epdc_fb_data *fb_data,
+        update.update_region.top = y1;
+        update.update_region.height = y2 - y1;
+        update.waveform_mode = WAVEFORM_MODE_AUTO;
+-       update.update_mode = UPDATE_MODE_FULL;
++       update.update_mode = UPDATE_MODE_PARTIAL;
+        update.update_marker = 0;
+        update.temp = TEMP_USE_AMBIENT;
+-       update.flags = 0;
++       update.flags = EPDC_FLAG_USE_REGAL;
+ 
+        mxc_epdc_fb_send_update(&update, &fb_data->info);
+ }
+@@ -3700,7 +3700,7 @@ static struct fb_ops mxc_epdc_fb_ops = {
+ };
+ 
+ static struct fb_deferred_io mxc_epdc_fb_defio = {
+-       .delay = HZ,
++       .delay = HZ / 30,
+        .deferred_io = mxc_epdc_fb_deferred_io,
+ };
+\end{minted}
+\caption{Enable automatic partial refreshing in the EPDC driver.}
+\label{fig:epdcautopart}
+\end{figure}
+
+
+
+\section{Configuration}
+To disable the compiler from using (now-deleted) firmware, it is necessary to disable some configuration options. Additionally, the default configuration provided by the reMarkable company doesn't have some desirable features. The diff shown in Figure \ref{fig:linuxconfigdiff} removes nonfree options and adds parameters to cover the EPDC deferred IO mode and new USB communications.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+diff --git a/arch/arm/configs/zero-gravitas_defconfig b/arch/arm/configs/zero-gravitas_defconfig
+index 196cb9ba6223..03faf33b66d4 100644
+--- a/arch/arm/configs/zero-gravitas_defconfig
++++ b/arch/arm/configs/zero-gravitas_defconfig
+-CONFIG_BRCMFMAC=m
++CONFIG_BRCMFMAC=n
+-CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_LOADER=y
+-CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_BINARY_FW_UPGRADE=y
++CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_LOADER=n
++CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_BINARY_FW_UPGRADE=n
+-CONFIG_IMX_SDMA=y
++CONFIG_IMX_SDMA=n
++CONFIG_FB_MXC_EINK_AUTO_UPDATE_MODE=y
++CONFIG_USB_ACM=y
++CONFIG_USB_F_ACM=y
++CONFIG_USB_U_SERIAL=y
++CONFIG_USB_CDC_COMPOSITE=y
+\end{minted}
+\caption{Make these config changes in \textit{arch/arm/config/zero-gravitas\_defconfig}.}
+\label{fig:linuxconfigdiff}
+\end{figure}
+
+
+
+
+
+
+
+\section{Compilation}
+Change into the base directory, run \textit{make zero-gravitas\_defconfig} to build \textit{.config}, then run \textit{make} to compile the kernel. The result will be two files: the kernel image at \textit{arch/arm/boot/zImage} and the device tree binary at \textit{arch/arm/boot/dts/zero-gravitas.dtb}.
+
+
+
+
+\chapter{Parabola OS}
+%% Overview
+This chapter goes through the process of installing the bootloader, kernel, and Parabola system files to the eMMC. These commands are expected to take place on the tablet with an SSH connection to the recovery initramfs.
+
+\section{Formatting the eMMC}
+In order to copy files there must be a partition table, and each partition formatted. Write the following DOS-type partition table with \textit{fdisk} on \textit{/dev/mmcblk1}.
+
+\vspace{0.5cm}
+\begin{tabular}{ r | c | l | r | l }
+  \textit{Partition} & \textit{Boot} & \textit{Type} & \textit{Size} & \textit{Description} \\
+  1 & • & W95 FAT32 (LBA) & 20 MiB & U-Boot (offset 4 MiB)\\
+  2 &  & Linux & 2 GiB & Parabola\\
+  3 &  & Linux & (fill) & Home
+\end{tabular}
+\vspace{0.5cm}
+
+Format these partitions with \textit{mkfs.vfat} and \textit{mkfs.ext4}. The ARM processor is 32-bit, and therefore cannot use the defaults set. For better performance with the eMMC NAND layout, tune the inode parameters.
+
+\vspace{0.5cm}
+\textit{mkfs.vfat /dev/mmcblk1p1}
+
+\vspace{0.5cm}
+\textit{mkfs.ext4 -O '\^{}64bit' -O '\textasciicircum metadata\_csum' -O 'uninit\_bg' -J 'size=4' -b 1024 -g 8192 -i 4096 -I 128 /dev/mmcblk1p2}
+
+\vspace{0.5cm}
+\textit{mkfs.ext4 -O '\^{}64bit' -O '\textasciicircum metadata\_csum' -O 'uninit\_bg' -J 'size=4' -b 1024 -g 8192 -i 4096 -I 128 /dev/mmcblk1p3}
+
+
+\section{Installing the OS}
+If one purchases a copy of this manual, it comes with a bundle of source files which are referenced in this section.
+
+\subsection{U-boot}
+Install the compiled bootloader onto the eMMC's \textit{boot0} protected partition. Enable writing with \textit{echo 0 > /sys/block/mmcblk1boot0/force\_ro}. Then, zero it out with \textit{dd if=/dev/null of=/dev/mmcblk1boot0}. Finally, install the bootloader with \textit{dd if=u-boot.imx of=/dev/mmcblk1boot0 bs=512 seek=2} and re-enable the write lock with \textit{echo 1 > /sys/block/mmcblk1boot0/force\_ro}.
+
+U-Boot will look for two files on the first partition (FAT): \textit{splash.bmp} and \textit{waveform.bin}. The former is a grayscale bitmap image shown when the device is loading. The latter makes it possible to show that image at all, because U-Boot will initialize the EPDC and signal with the waveforms in that file. The waveform file may be found in the compiled kernel target, \textit{epdc\_ES103CS1.fw}.
+
+Mount the \textit{/dev/mmcblk1p1} partition to \textit{/mnt/p1}, and copy these files there.
+
+\subsection{Linux}
+Mount the \textit{/dev/mmmcblk1p2} partition to \textit{/mnt/p2}. On that partition, create the \textit{/boot} directory. From the compiled Linux kernel, copy into \textit{/boot} the \textit{arch/arm/boot/zImage} and \textit{arch/arm/boot/dts/zero-gravitas.dtb} files.
+
+
+\subsection{Parabola rootfs}
+Download the Parabola armv7h tarball archive from \href{https://wiki.parabola.nu/Get_Parabola#Parabola_SystemD_CLI_Tarball_and_VM_Image}{its download page}. Since the tablet does not have much space, it is best to extract this through SSH with \textit{pv parabola-tarball.tar.gz | ssh root@10.11.99.1 'tar xpf - -C /mnt/p2'}. Once extracted, most of the system is installed. However, if one tries to boot their tablet in this state, it can't yet communicate with the user.
+
+
+\section{Bootstrapping communications}
+The kernel will look for, and execute, the \textit{/sbin/init} script. However, the system won't do anything useful until one is able to communicate with it. Create a systemd service to enable serial communications.
+
+\vspace{0.5cm}
+\textit{cd /mnt/p2/etc/systemd/system/getty.target.wants}
+
+\vspace{0.5cm}
+\textit{ln -s /usr/lib/systemd/system/serial-getty\@.service serial-getty@ttyGS0.service}
+
+\vspace{0.5cm}
+
+Disable the \textit{pam\_securetty.so} module in \textit{/mnt/p2/etc/pam.d/login}, as shown in Figure \ref{fig:pamsecurettydisabled}. Write the \textit{/mnt/p2/etc/fstab} file, as defined in Figure \ref{fig:fstab}. Finally, reboot, and a login prompt should appear on the USB serial console.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{Bash}
+#%PAM-1.0
+
+#auth       required     pam_securetty.so
+auth       requisite    pam_nologin.so
+auth       include      system-local-login
+account    include      system-local-login
+session    include      system-local-login
+\end{minted}
+\caption{\textit{/etc/pam.d/login}}
+\label{fig:pamsecurettydisabled}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+/dev/mmcblk1p2  /               auto    defaults                    1  1
+/dev/mmcblk1p1  /var/lib/uboot  auto    defaults                    0  0
+/dev/mmcblk1p3  /home           auto    defaults                    0  2
+devpts  /dev/pts        devpts  mode=0620,gid=5                     0  0
+proc    /proc           proc    defaults                            0  0
+tmpfs   /run            tmpfs   mode=0755,nodev,nosuid,strictatime  0  0
+tmpfs   /tmp            tmpfs   defaults                            0  0
+tmpfs   /root/.cache    tmpfs   defaults,size=20M                   0  0
+\end{minted}
+\caption{\textit{/etc/fstab}}
+\label{fig:fstab}
+\end{figure}
+
+
+
+\pagebreak
+\section{Configuring the network}
+Because the Parabola tarball includes out-of-date software, the system must be configured with a network before it can fetch updates. It is expected the reader has some networking knowledge, and is able to set this up on their own since each PC operating system handles it differently. In the following example, FreeBSD 12.1 is used because it packages the necessary software in the base installation, so that it may route traffic. This example assumes the PC is a laptop, connected to the Internet with its \textit{wlan0} (Wi-Fi) interface.
+
+Configure the PC's USB Ethernet interface with a static IP address: \textit{ifconfig ue0 10.11.99.2/24 up}.
+
+Configure the tablet with a static IP address through a systemd service. Move \textit{/etc/systemd/network/eth0.network} to \textit{/etc/systemd/network/usb0.network}, and write into it the contents of Figure \ref{fig:usb0net}.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+[Match]
+Name=usb0
+
+[Network]
+Address=10.11.99.1/24
+\end{minted}
+\caption{\textit{/etc/systemd/network/usb0.network}}
+\label{fig:usb0net}
+\end{figure}
+
+Restart the systemd networking service with \textit{systemctl restart systemd-networkd}, and add a temporary route through the PC with \textit{ip route add default via 10.11.99.2}
+
+Configure the PC's firewall to route traffic between the tablet's virtual NIC (\textit{ue0}) and the Wi-Fi NIC (\textit{wlan0}), as shown in Figure \ref{fig:pfconf}.
+
+Test the network connection and name resolution with \textit{ping fsf.org}. Once successful, set the tablet's time and date with \textit{timedatectl set-ntp true} and \textit{systemctl restart systemd-timedated}.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+nat on wlan0 from {10.11.99.1/24} to any -> (wlan0)
+\end{minted}
+\caption{\textit{/etc/pf.conf} on the PC}
+\label{fig:pfconf}
+\end{figure}
+
+\pagebreak
+\section{Upgrading the system software}
+Parabola uses \textit{pacman} as its package manager, so users of Arch Linux should feel comfortable. Initialize the keys with \textit{pacman-key -\phantom{}-init}, \textit{pacman-key -\phantom{}-populate}, and \textit{pacman-key -\phantom{}-refresh-keys}\footnote{The refresh-keys command may fail due to a key not being available in a public keyserver. This message can be ignored.}. The tablet uses a self-compiled kernel, so remove the \textit{linux-libre} package with \textit{pacman -R linux-libre}. Update the package database with \textit{pacman -Syy}. The keyring programs may be out of date, so upgrade these first with \textit{pacman -S archlinux-keyring parabola-keyring}. Finally, update the rest of the system software with \textit{pacman -Syu}, and reboot.
+
+
+\section{Auto-networking}
+It may be convenient for a PC to auto-configure its network settings when the tablet is plugged in. This can be accomplished by running a DHCP server. A good program for this is \textit{dnsmasq}: install it with \textit{pacman -S dnsmasq} and write its configuration file to bind to the \textit{usb0} interface, as shown in Figure \ref{fig:dnsmasqconf}. Make it run with \textit{systemctl start dnsmasq} and set it to start at boot with \textit{systemctl enable dnsmasq}.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+interface=usb0
+bind-interfaces
+dhcp-range=10.11.99.2,10.11.99.253,10m
+dhcp-option=6  # Don't send DNS
+\end{minted}
+\caption{\textit{/etc/dnsmasq.conf}}
+\label{fig:dnsmasqconf}
+\end{figure}
+
+
+\section{Configuring graceful shutdowns}
+If one purchases a copy of this manual, it comes with support files for executing graceful shutdowns. Create a directory at \textit{/var/lib/remarkable}, copy there \textit{epdc-show-bitmap}\footnote{See the source listing, \nameref{epdc-show-bitmap.c}.} and make that executable. Copy \textit{splash-off.raw} to \textit{/var/lib/uboot} (to keep it next to the other splash image).
+
+A systemd service will execute before shutdown to show this splash screen and vacuum the system log. Write the primary script to \textit{/var/lib/remarkable/shutdown.sh}, as shown in Figure \ref{fig:shutdown.sh}, and set its execution bit.
+
+Write the contents of Figure \ref{fig:shutdown.service} to \textit{/etc/systemd/system/remarkable-shutdown.service} to run it as a systemd service. Then, \textit{systemctl start remarkable-shutdown.service} and \textit{systemctl enable remarkable-shutdown.service}.
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+#!/usr/bin/env bash
+pgrep Xorg | xargs wait
+sleep 1
+journalctl --vacuum-size=100M
+/var/lib/remarkable/epdc-show-bitmap /var/lib/uboot/splash-off.raw
+\end{minted}
+\caption{\textit{/var/lib/remarkable/shutdown.sh}}
+\label{fig:shutdown.sh}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+[Unit]
+Description=rM shutdown helper
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=/var/lib/remarkable/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target
+\end{minted}
+\caption{\textit{/etc/systemd/system/remarkable-shutdown.service}}
+\label{fig:shutdown.service}
+\end{figure}
+
+
+\section{Fixing slow logins}
+There is a bug in \textit{systemd-logind} where \textit{pam\_systemd.so} may prevent a login from happening. An error results stating, ``pam\_systemd(login:session): Failed to create session: Input/output error.'' This may be fixed by disabling \textit{pam\_systemd.so} from \textit{/etc/pam.d/system-login}, as shown in Figure \ref{fig:pamsystemlogin}.
+
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+...
+session    optional   pam_motd.so          motd=/etc/motd
+session    optional   pam_mail.so          dir=/var/spool/mail standard quiet
+--session   optional   pam_systemd.so
++#-session   optional   pam_systemd.so
+session    required   pam_env.so           user_readenv=1
+\end{minted}
+\caption{\textit{/etc/pam.d/system-login}}
+\label{fig:pamsystemlogin}
+\end{figure}
+
+
+
+
+
+
+    
+\chapter{Desktop Environment}
+In the \nameref{ch:linux} chapter, the kernel was modified to provide fast deferred IO framebuffer updates. This mechanism pushes screen updates from \textit{/dev/fb0} to the EPDC \textit{ex post facto}. Ergo, Xorg may run without any further modifications. The window manager uses Xorg as its interface.
+
+The desktop environment (DE) covered in this chapter is Xfce, but any DE may be used. Xfce was selected because it is relatively light, yet full-featured.
+
+\section{Xorg}
+Install Xorg through the package manager with \textit{pacman -S xorg-server xf86-video-fbdev xf86-input-evdev}. Evdev is required to use the EMR digitizer, but libinput (installed with \textit{xorg-server}) may be used with the other input devices.
+
+After installation, a configuration should be written to \textit{/etc/X11/xorg.conf}\footnote{A sample configuration file is listed in the \nameref{xorg.conf} appendix.}.
+
+Before the framebuffer can work with Xorg, it must be placed into Automatic Update mode. Copy the \textit{epdc-init-auto}\footnote{The source of tihs program is listed in \nameref{epdc-init-auto.c}.} program to \textit{/var/lib/remarkable}, set its execution bit, and run it. The screen should blank (go black), and then turn white again.
+
+Test Xorg by running it with \textit{Xorg -nocursor}. The tablet's screen should blank when it is run. Inspect \textit{/var/log/Xorg.0.log} to ensure all input devices are registered.
+
+
+\section{Xfce}
+Install Xfce through the package manager with \textit{pacman -S exo garcon thunar thunar-volman tumbler xfce4-appfinder xfce4-panel xfce4-session xfce4-settings xfce4-terminal xfconf xfdesktop xfwm4 xfwm4-themes}\footnote{While Xfce is available in the \textit{xfce} metapackage, that should not be used because it bundles a power manager which may cause issues.}.
+
+Test Xfce by forking an Xorg process, then run \textit{xfce4-session}. Ensure the window manager loads, then log out through \textit{Applications$\rightarrow$Log Out} and disable, ``Save session for future logins.''
+
+
+\section{Automatic loading}
+The DE may be configured to start at boot. This process logs \textit{root} in automatically on \textit{tty1}, and that user's shell profile will start the X server and desktop session.
+
+Copy the content of Figure \ref{fig:xserverrc} into \textit{\textasciitilde/.xserverrc}, Figure \ref{fig:xinitrc} into \textit{\textasciitilde/.xinitrc}, and Figure \ref{fig:bash_profile} into \textit{\textasciitilde/.bash\_profile}.
+
+To configure the automatic login, it is necessary to edit the \textit{tty1} service to log \textit{root} in without a password. Edit \textit{/etc/systemd/system/getty.target.wants/getty@tty1.service} and change it so \textit{agetty} performs the login, shown in Figure \ref{fig:tty1login}.
+
+\pagebreak
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{bash}
+#!/bin/sh
+/var/lib/remarkable/epdc-init-auto
+exec /usr/bin/Xorg -nocursor
+\end{minted}
+\caption{\textit{\textasciitilde/.xserverrc}}
+\label{fig:xserverrc}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{bash}
+dbus-launch xfce4-session
+\end{minted}
+\caption{\textit{\textasciitilde/.xinitrc}}
+\label{fig:xinitrc}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{bash}
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+    startx
+fi
+\end{minted}
+\caption{\textit{\textasciitilde/.bash\_profile}}
+\label{fig:bash_profile}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{bash}
+...
+ExecStart=-/sbin/agetty -a root --noclear %I $TERM
+...
+\end{minted}
+\caption{\textit{/etc/systemd/system/getty.target.wants/getty@tty1.service}}
+\label{fig:tty1login}
+\end{figure}
+
+
+
+
+\subsection{E-paper optimization}
+A number of tweaks may be made to Xfce to perform better with the tablet's electrophoretic display. These optimizations increase the use of monochrome.
+
+It is recommended to install the Onboard virtual keyboard with \textit{pacman -S onboard ttf-dejavu}. The font is necessary to render Unicode glyphs used in the keys' labels. A virtual keyboard makes the following steps easier.
+
+The default system does not have usable scrollbars because they are not shown full-time. Run this command to edit the GTK3 setting: \textit{gsettings set org.gnome.desktop.interface overlay-scrolling false}. Add \textit{export GTK\_OVERLAY\_SCROLLING=0} to the beginning of \textit{\textasciitilde/.xinitrc} to cover GTK2.
+
+Set the following preferences through the GUI.
+
+\pagebreak
+\vspace{0.5cm}
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Appearance}
+  \begin{itemize}
+  \item[]{$\rightarrow$Style}
+    \begin{itemize}
+      \item[]{Select: High Contrast}
+    \end{itemize}
+  \item[]{$\rightarrow$Icons}
+    \begin{itemize}
+      \item[]{Select: High Contrast}
+    \end{itemize}
+  \item[]{$\rightarrow$Fonts}
+    \begin{itemize}
+      \item[]{Set Default Font: System-ui Regular}
+      \item[]{Disable: Anti-aliasing}
+      \item[]{Disable: Custom DPI scaling}
+    \end{itemize}
+  \item[]{$\rightarrow$Settings}
+    \begin{itemize}
+      \item[]{Set Toolbar Style: Text}
+      \item[]{Disable: Show images on buttons}
+      \item[]{Disable: Show images in menus}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Desktop}
+  \begin{itemize}
+  \item[]{$\rightarrow$Background}
+    \begin{itemize}
+      \item[]{Set Style: None}
+      \item[]{Set Color: Solid Color, White}
+    \end{itemize}
+  \item[]{$\rightarrow$Icons}
+    \begin{itemize}
+      \item[]{Disable: Show Icon Tooltips}
+      \item[]{Enable: Single click to activate items}
+      \item[]{Disable: Default Icons$\rightarrow$Removable Devices$\rightarrow$Other Devices}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$File Manager Settings}
+  \begin{itemize}
+  \item[]{$\rightarrow$Behavior}
+    \begin{itemize}
+      \item[]{Enable: Single click to activate items}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\pagebreak
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Panel}
+  \begin{itemize}
+  \item[]{$\rightarrow$Display}
+    \begin{itemize}
+      \item[]{Set Row Size: 50 px}
+    \end{itemize}
+  \item[]{$\rightarrow$Appearance}
+    \begin{itemize}
+      \item[]{Set Fixed Icon Size: 32 px}
+    \end{itemize}
+  \item[]{$\rightarrow$Items}
+    \begin{itemize}
+      \item[]{Remove: Action Buttons}
+      \item[]{Edit: Window Buttons}
+        \begin{itemize}
+          \item[]{Disable: Show button labels}
+          \item[]{Enable: Show flat buttons}
+          \item[]{Set Sorting Order: None, allow drag and drop}
+          \item[]{Set Window Grouping: Never}
+        \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Window Manager}
+  \begin{itemize}
+  \item[]{$\rightarrow$Style}
+    \begin{itemize}
+      \item[]{Set Theme: Default-xhdpi}
+      \item[]{Set Title Font: System-ui Bold}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Window Manager Tweaks}
+  \begin{itemize}
+  \item[]{$\rightarrow$Compositor}
+    \begin{itemize}
+      \item[]{Disable: Show shadows under dock windows}
+      \item[]{Disable: Show shadows under regular windows}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item[]{Applications$\rightarrow$System$\rightarrow$Xfce Terminal$\rightarrow$Edit$\rightarrow$Preferences}
+  \begin{itemize}
+  \item[]{$\rightarrow$General}
+    \begin{itemize}
+      \item[]{Set Cursor Shape: Underline}
+    \end{itemize}
+  \item[]{$\rightarrow$Appearance}
+    \begin{itemize}
+      \item[]{Enable: Use system font}
+      \item[]{Set Text Blinks: Never}
+    \end{itemize}
+  \item[]{$\rightarrow$Colors}
+    \begin{itemize}
+      \item[]{Set Presets: Black on White}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+
+
+
+\pagebreak
+\section{Battery charge indicator}
+Since it is useful to know the state of charge, one may add a battery monitor to the Xfce panel with \textit{xfce4-genmon-plugin}. After installing the plugin, write the battery monitor script as shown in Figure \ref{fig:battery-monitor.sh}, then add an indicator through the GUI with the following sequence.
+
+\begin{itemize}
+\item[]{Applications$\rightarrow$Settings$\rightarrow$Panel}
+  \begin{itemize}
+  \item[]{$\rightarrow$Items}
+    \begin{itemize}
+    \item[]{Add New Item: Generic Monitor}
+      \item[]{Edit: Generic Monitor}
+        \begin{itemize}
+          \item[]{Command: /usr/sbin/battery-monitor.sh}
+          \item[]{Disable: Label}
+        \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+\begin{figure}[h]
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{bash}
+#!/usr/bin/env bash
+
+# battery-monitor.sh
+# Prints the state of charge of the tablet's battery
+#
+# Parabola-rM is a free operating system for the reMarakble tablet.
+# Copyright (C) 2020  Davis Remmel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Path for Linux 4.9
+battpath="/sys/class/power_supply/bq27441-0"
+
+chargenow="$(cat $battpath/charge_now)"
+chargefull="$(cat $battpath/charge_full)"
+status="$(cat $battpath/status)"
+
+chargepct="$(echo $chargenow $chargefull \
+                  | awk '{printf "%f", $1 / $2 * 100}' \
+                  | cut -d'.' -f1)"
+
+symbol=""
+if [[ "Charging" == "$status" ]]
+then
+    symbol=$'\u26a1'  # Lightning symbol
+fi
+
+echo "${symbol}${chargepct}%"
+\end{minted}
+\caption{\textit{/usr/sbin/battery-monitor.sh}}
+\label{fig:battery-monitor.sh}
+\end{figure}
+
+
+
+\chapter{Conclusion}
+\label{ch:conclusion}
+If one followed every step in this manual, they should now have a system identical to the Parabola-rM image. This system conveys the following features.
+
+\begin{itemize}
+  
+\item{Working power management with splash screens}
+\item{Fast electrophoretic display refreshing}
+\item{Graphical X11 desktop environment optimized for e-paper}
+\item{Working EMR digitizer and capacitive touchscreen}
+\item{Automatic loading of window manager}
+\item{Battery charge indicator}
+\item{Facial buttons mapped to Power, Left, Home, and Right}
+  \item{USB On-the-Go (OTG) peripheral support}
+\end{itemize}
+
+The following features will not work because they are incompatible with the free software currently available.
+
+\begin{itemize}
+\item{Embedded Wi-Fi networking}
+\item{Smart Direct Memory Access (SDMA)\footnote{For more information, see i.MX Linux Reference Manual, Chapter 3.7.}}
+\end{itemize}
+
+\section{Further reading}
+These sites may be useful for someone installing GNU/Linux to i.MX6-based hardware. 
+
+\begin{itemize}
+\item{\href{https://www.nxp.com/docs/en/user-guide/IMXLUG.pdf}{i.MX Linux Reference Manual (IMXLXRM)}}
+\item{\href{https://wiki.parabola.nu/ARM_Installation_Guide}{Parabola ARM Installation Guide}}
+\item{\href{https://www.digikey.com/eewiki/display/linuxonarm/i.MX6+SABRE+Lite}{i.MX6 SABRE Lite---Linux on ARM}}
+  \item{\href{https://community.nxp.com/}{NXP Community Forum}}
+  \end{itemize}
+
+
+
+
+
+\appendix
+
+
+\chapter{Patch: U-Boot Config}
+\label{ch:ubootdiff}
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+diff --git a/include/configs/zero-gravitas.h b/include/configs/zero-gravitas.h
+index 074f171422..2a64e3651c 100644
+--- a/include/configs/zero-gravitas.h
++++ b/include/configs/zero-gravitas.h
+@@ -71,12 +71,10 @@
+        "splashimage=0x80000000\0" \
+        "splashpos=m,m\0" \
+        "active_partition=2\0" \
+-       "fallback_partition=3\0" \
+        "bootlimit=1\0" \
+        "por=undefined\0" \
+-       "mmcargs=setenv bootargs console=${console},${baudrate} " \
+-                       "systemd.crash_reboot=true memtest " \
+-                       "root=/dev/mmcblk1p${active_partition} rootwait rootfstype=ext4 quiet rw por=${por};\0" \
++       "mmcargs=setenv bootargs console=${console},${baudrate} " \
++                       "root=/dev/mmcblk1p2 rootwait rootfstype=ext4 rw por=${por};\0" \
+        "loadimage=ext4load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+        "loadfdt=ext4load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+        "mmcboot=echo Booting from mmc ...; " \
+@@ -89,41 +87,13 @@
+                                        "echo WARN: Cannot load the DT; " \
+                                "fi; " \
+                        "fi; " \
+-               "fi;\0" \
+-       "memboot=echo Booting from memory...; " \
+-               "setenv bootargs console=${console},${baudrate} " \
+-               "g_mass_storage.stall=0 g_mass_storage.removable=1 " \
+-               "g_mass_storage.idVendor=0x066F g_mass_storage.idProduct=0x37FF "\
+-               "g_mass_storage.iSerialNumber=\"\" rdinit=/linuxrc; "\
+-               "bootz ${loadaddr} ${initrd} ${fdt_addr};\0" \
+-       "altbootcmd=echo Running from fallback root...; " \
+-               "run memboot; " \
+-               "if test ${bootcount} -gt 10; then " \
+-                       "echo WARN: Failed too much, resetting bootcount and turning off; " \
+-                       "setenv bootcount 0; " \
+-                       "saveenv; " \
+-                       "poweroff; " \
+-               "fi; " \
+-               "setenv mmcpart ${fallback_partition}; " \
+-               "setenv bootargs console=${console},${baudrate} " \
+-                               "root=/dev/mmcblk1p${fallback_partition} rootwait rootfstype=ext4 quiet rw " \
+-                               "systemd.log_level=debug systemd.log_target=kmsg memtest " \
+-                               "log_buf_len=1M printk.devkmsg systemd.journald.forward_to_console=1; " \
+-               "run mmcboot;\0" \
++               "fi;\0"
+ 
+ /* Always try to boot from memory first, in case of USB download mode */
+ #define CONFIG_BOOTCOMMAND \
+-       "if test ! -e mmc 1:1 uboot.env; then " \
+-               "saveenv; " \
+-       "fi; " \
+-       "run memboot; " \
+        "run mmcargs; " \
+        "setenv mmcpart ${active_partition}; " \
+-       "run mmcboot; " \
+-       "echo WARN: unable to boot from either RAM or eMMC; " \
+-       "setenv upgrade_available 1; " \
+-       "saveenv; " \
+-       "reset; "
++       "run mmcboot; "
+ 
+ #ifdef CONFIG_BOOTDELAY
+ #undef CONFIG_BOOTDELAY
+@@ -157,18 +127,8 @@
+ /* Environment organization */
+ #define CONFIG_ENV_SIZE                        SZ_8K
+ 
+-#define CONFIG_ENV_IS_IN_FAT
+-/*#define CONFIG_ENV_IS_NOWHERE*/
+-
+-#ifdef CONFIG_ENV_IS_IN_FAT
+-#define CONFIG_BOOTCOUNT_LIMIT
+-#define CONFIG_BOOTCOUNT_ENV
+-
+-#define FAT_ENV_INTERFACE "mmc"
+-#define FAT_ENV_DEVICE_AND_PART "1:1"
+-#define CONFIG_FAT_WRITE
+-#define FAT_ENV_FILE "uboot.env"
+-#endif
++/*#define CONFIG_ENV_IS_IN_FAT*/
++#define CONFIG_ENV_IS_NOWHERE
+ 
+ #ifdef CONFIG_CMD_SF
+ #define CONFIG_MXC_SPI
+\end{minted}
+
+
+
+\chapter{Patch: EPDC QoS}
+\label{patchepdcqos}
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+commit a50e901c0ea3270140e4dc6731952e6a166293e3
+Author: Max Tsai <max.tsai@nxp.com>
+Date:   Tue May 28 16:06:38 2019 +0800
+
+    mx6sl - raises QoS priority to highest on EPDC reading
+    stress test can pass with 1920x1920 resolution
+    
+    stress test command
+    /unit_tests/mxc_epdc_fb_test.out -n 14
+
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index c1603dad4640..e9aa8b454c86 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -798,6 +798,11 @@
+ 				clock-names = "dcp";
+ 				status = "okay";
+ 			};
++
++			qosc: qosc@02094000 {
++				compatible = "fsl,imx6sl-qosc";
++				reg = <0x02094000 0x4000>;
++			};
+ 		};
+ 
+ 		aips2: aips-bus@02100000 {
+diff --git a/drivers/video/fbdev/mxc/mxc_epdc_fb.c b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+index 1497f728468e..d4f4778377e7 100644
+--- a/drivers/video/fbdev/mxc/mxc_epdc_fb.c
++++ b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+@@ -56,6 +56,16 @@
+ 
+ #include "epdc_regs.h"
+ 
++#define QOS_ENABLE
++/*
++ * MMDC_MAARCR[ARCR_RCH_EN] = 1 by default
++ * QoS=='F' is real time access
++ */
++#ifdef QOS_ENABLE
++#include <linux/of_address.h>
++#define QOS_EPDC_OFFSET	0x1400 // 0x1400 for 6SL, 0x1800 for 6SLL
++#endif
++
+ /*
+  * Enable this define to have a default panel
+  * loaded during driver initialization
+@@ -221,6 +231,9 @@ struct mxc_epdc_fb_data {
+ 	dma_cookie_t cookie;
+ 	struct scatterlist sg[2];
+ 	struct mutex pxp_mutex; /* protects access to PxP */
++#ifdef QOS_ENABLE
++	void __iomem *qos_base;
++#endif
+ };
+ 
+ struct waveform_data_header {
+@@ -1177,6 +1190,12 @@ static void epdc_init_settings(struct mxc_epdc_fb_data *fb_data)
+ 	__raw_writel(fb_data->working_buffer_phys, EPDC_WB_ADDR);
+ 	__raw_writel(fb_data->working_buffer_phys, EPDC_WB_ADDR_TCE);
+ 
++#ifdef QOS_ENABLE
++	u32 ot_wr, ot_rd;
++	ot_wr = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xd0);
++	ot_rd = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xe0);
++	dev_dbg(fb_data->dev, "EPDC QoS wr 0x%x, rd 0x%x\n", ot_wr, ot_rd);
++#endif
+ 	/* Disable clock */
+ 	clk_disable_unprepare(fb_data->epdc_clk_axi);
+ 	clk_disable_unprepare(fb_data->epdc_clk_pix);
+@@ -4746,6 +4765,31 @@ int mxc_epdc_fb_probe(struct platform_device *pdev)
+ 
+ 	clk_prepare_enable(fb_data->epdc_clk_axi);
+ 	val = __raw_readl(EPDC_VERSION);
++
++#ifdef QOS_ENABLE
++	/* axi clock must enable for EPDC QoS access */
++	u32 ot_wr, ot_rd;
++	struct device_node *np = of_find_compatible_node(NULL, NULL, "fsl,imx6sl-qosc");
++	if (!np)
++		return -EINVAL;
++	fb_data->qos_base = of_iomap(np, 0);
++	WARN_ON(!fb_data->qos_base);
++	__raw_writel(0, fb_data->qos_base);		/* disable clkgate&soft_reset */
++	__raw_writel(0, fb_data->qos_base + 0x40);	/* enable all masters */
++	__raw_writel(0, fb_data->qos_base + QOS_EPDC_OFFSET);  /* Disable clkgate & soft_reset */
++	ot_wr = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xd0);
++	ot_rd = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xe0);
++	dev_dbg(fb_data->dev, "EPDC QoS wr 0x%x, rd 0x%x\n", ot_wr, ot_rd);
++
++	/*
++	__raw_writel(0x0f020f22, fb_data->qos_base + QOS_EPDC_OFFSET + 0xd0);
++	*/
++	__raw_writel(0x0f020f22, fb_data->qos_base + QOS_EPDC_OFFSET + 0xe0);
++	ot_wr = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xd0);
++	ot_rd = __raw_readl(fb_data->qos_base + QOS_EPDC_OFFSET + 0xe0);
++	dev_dbg(fb_data->dev, "EPDC QoS wr 0x%x, rd 0x%x\n", ot_wr, ot_rd);
++#endif
++
+ 	clk_disable_unprepare(fb_data->epdc_clk_axi);
+ 	fb_data->rev = ((val & EPDC_VERSION_MAJOR_MASK) >>
+ 				EPDC_VERSION_MAJOR_OFFSET) * 10
+\end{minted}
+
+
+\chapter{Patch: EPDC SW Reset}
+\label{patchepdcreset}
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{diff}
+From 77f3582c541d91ff864cf7e5ebbaf288daf8dcda Mon Sep 17 00:00:00 2001
+From: Max Tsai <max.tsai@nxp.com>
+Date: Fri, 31 May 2019 16:05:11 +0800
+Subject: [PATCH] 6SL EPDC - Change SW reset flow can make it work.
+
+---
+ arch/arm/boot/dts/imx6sl.dtsi         |   4 +-
+ drivers/video/fbdev/mxc/mxc_epdc_fb.c | 341 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 339 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index c1603dad4640..d1e499729420 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -772,8 +772,8 @@
+ 				compatible = "fsl,imx6sl-epdc", "fsl,imx6dl-epdc";
+ 				reg = <0x020f4000 0x4000>;
+ 				interrupts = <0 97 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX6SL_CLK_EPDC_AXI>, <&clks IMX6SL_CLK_EPDC_PIX>;
+-				clock-names = "epdc_axi", "epdc_pix";
++				clocks = <&clks IMX6SL_CLK_EPDC_AXI>, <&clks IMX6SL_CLK_EPDC_PIX>, <&clks IMX6SL_CLK_EPDC_PIX_PODF>;
++				clock-names = "epdc_axi", "epdc_pix", "epdc_pix_podf";
+ 			};
+ 
+ 			lcdif: lcdif@020f8000 {
+diff --git a/drivers/video/fbdev/mxc/mxc_epdc_fb.c b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+index 1497f728468e..5c7dc925fb2a 100644
+--- a/drivers/video/fbdev/mxc/mxc_epdc_fb.c
++++ b/drivers/video/fbdev/mxc/mxc_epdc_fb.c
+@@ -20,7 +20,6 @@
+  * Based on STMP378X LCDIF
+  * Copyright 2008 Embedded Alley Solutions, Inc All Rights Reserved.
+  */
+-
+ #include <linux/busfreq-imx.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+@@ -56,6 +55,8 @@
+ 
+ #include "epdc_regs.h"
+ 
++#define SW_RESET
++
+ /*
+  * Enable this define to have a default panel
+  * loaded during driver initialization
+@@ -221,6 +222,9 @@ struct mxc_epdc_fb_data {
+ 	dma_cookie_t cookie;
+ 	struct scatterlist sg[2];
+ 	struct mutex pxp_mutex; /* protects access to PxP */
++
++	bool in_recovery;
++	bool is_drop_updates;
+ };
+ 
+ struct waveform_data_header {
+@@ -254,6 +258,23 @@ struct mxcfb_waveform_data_file {
+ 	u32 *data;	/* Temperature Range Table + Waveform Data */
+ };
+ 
++static struct fb_videomode virtual_test_mode = {
++	.name="E60_V110",
++	.refresh=85,
++	.xres=1920,
++	.yres=1440,
++	.pixclock=160000000,
++	.left_margin=36,
++	.right_margin=248,
++	.upper_margin=4,
++	.lower_margin=8,
++	.hsync_len=52,
++	.vsync_len=1,
++	.sync=0,
++	.vmode=FB_VMODE_NONINTERLACED,
++	.flag=0,
++};
++
+ static struct fb_videomode e60_v110_mode = {
+ 	.name = "E60_V110",
+ 	.refresh = 50,
+@@ -323,6 +344,19 @@ static struct fb_videomode e97_v110_mode = {
+ };
+ 
+ static struct imx_epdc_fb_mode panel_modes[] = {
++	{
++		&virtual_test_mode,
++		4, 	/* vscan_holdoff */
++		10, 	/* sdoed_width */
++		20, 	/* sdoed_delay */
++		10, 	/* sdoez_width */
++		20, 	/* sdoez_delay */
++		972, 	/* GDCLK_HP */
++		721, 	/* GDSP_OFF */
++		0, 	/* GDOE_OFF */
++		71, 	/* gdclk_offs */
++		1, 	/* num_ce */
++	},
+ 	{
+ 		&e60_v110_mode,
+ 		4,      /* vscan_holdoff */
+@@ -413,6 +447,8 @@ static void do_dithering_processing_Y4_v1_0(
+ 		unsigned long update_region_stride,
+ 		int *err_dist);
+ 
++static void epdc_recover(struct mxc_epdc_fb_data *fb_data);
++
+ #ifdef DEBUG
+ static void dump_pxp_config(struct mxc_epdc_fb_data *fb_data,
+ 			    struct pxp_config_data *pxp_conf)
+@@ -605,7 +641,7 @@ static void dump_pending_list(struct mxc_epdc_fb_data *fb_data)
+ {
+ 	struct update_desc_list *plist;
+ 
+-	dev_info(fb_data->dev, "Queue:\n");
++	dev_info(fb_data->dev, "Pending Queue:\n");
+ 	if (list_empty(&fb_data->upd_pending_list))
+ 		dev_info(fb_data->dev, "Empty");
+ 	list_for_each_entry(plist, &fb_data->upd_pending_list, list)
+@@ -616,6 +652,7 @@ static void dump_all_updates(struct mxc_epdc_fb_data *fb_data)
+ {
+ 	dump_free_list(fb_data);
+ 	dump_queue(fb_data);
++	dump_pending_list(fb_data);
+ 	dump_collision_list(fb_data);
+ 	dev_info(fb_data->dev, "Current update being processed:\n");
+ 	if (fb_data->cur_update == NULL)
+@@ -1014,10 +1051,26 @@ static void epdc_init_settings(struct mxc_epdc_fb_data *fb_data)
+ 	__raw_writel(EPDC_CTRL_SFTRST, EPDC_CTRL_SET);
+ 	while (!(__raw_readl(EPDC_CTRL) & EPDC_CTRL_CLKGATE))
+ 		;
+-	__raw_writel(EPDC_CTRL_SFTRST, EPDC_CTRL_CLEAR);
+ 
++	/* Let finish the process */
++	udelay(200);
++
++	/*
++	 * synchronization from system clock to pixel clock of
++	 * underrun flag has not included a sw reset.
++	 * Due to the gap between sw_reset_sys_clock and
++	 * sw_rest_pixel_clock, there maybe one underrun flag
++	 * after sw_reset_sys_clock then remain to next restart
++	 * due to the lack of sw_reset for the crossing signals.
++	 * This unexpected residual underrun flag will cause
++	 * the lock-up after restart.
++	 * change the restart flow to release clock before
++	 * release sw_reset to workaround the issue.
++	 */
+ 	/* Enable clock gating (clear to enable) */
+ 	__raw_writel(EPDC_CTRL_CLKGATE, EPDC_CTRL_CLEAR);
++	udelay(100);
++	__raw_writel(EPDC_CTRL_SFTRST, EPDC_CTRL_CLEAR);
+ 	while (__raw_readl(EPDC_CTRL) & (EPDC_CTRL_SFTRST | EPDC_CTRL_CLKGATE))
+ 		;
+ 
+@@ -2401,6 +2454,10 @@ static void epdc_submit_work_func(struct work_struct *work)
+ 	int *err_dist;
+ 	int ret;
+ 
++	/* just drop out when reset */
++	if (fb_data->is_drop_updates)
++		return 0;
++
+ 	/* Protect access to buffer queues and to update HW */
+ 	mutex_lock(&fb_data->queue_mutex);
+ 
+@@ -3197,6 +3254,10 @@ int mxc_epdc_fb_wait_update_complete(struct mxcfb_update_marker_data *marker_dat
+ 	if (!ret) {
+ 		dev_err(fb_data->dev,
+ 			"Timed out waiting for update completion\n");
++#ifdef SW_RESET
++		/* controller locked-up recover the HW */
++		epdc_recover(fb_data);
++#endif
+ 		return -ETIMEDOUT;
+ 	}
+ 
+@@ -3274,6 +3335,10 @@ static int mxc_epdc_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		{
+ 			struct mxcfb_update_data upd_data;
+ 
++			/* just drop out when reset */
++			if (g_fb_data->is_drop_updates)
++				return 0;
++
+ 			if (mutex_lock_interruptible(&hard_lock) < 0)
+ 				return -ERESTARTSYS;
+ 
+@@ -3451,9 +3516,14 @@ void mxc_epdc_fb_flush_updates(struct mxc_epdc_fb_data *fb_data)
+ 		/* Wait for any currently active updates to complete */
+ 		ret = wait_for_completion_timeout(&fb_data->updates_done,
+ 						msecs_to_jiffies(8000));
+-		if (!ret)
++		if (!ret) {
+ 			dev_err(fb_data->dev,
+ 				"Flush updates timeout! ret = 0x%x\n", ret);
++#ifdef SW_RESET
++			/* Recover EPDC */
++			epdc_recover(fb_data);
++#endif
++		}
+ 
+ 		mutex_lock(&fb_data->queue_mutex);
+ 		fb_data->waiting_for_idle = false;
+@@ -3611,6 +3681,7 @@ static bool is_free_list_full(struct mxc_epdc_fb_data *fb_data)
+ 		return false;
+ }
+ 
++
+ static irqreturn_t mxc_epdc_irq_handler(int irq, void *dev_id)
+ {
+ 	struct mxc_epdc_fb_data *fb_data = dev_id;
+@@ -3661,6 +3732,8 @@ static irqreturn_t mxc_epdc_irq_handler(int irq, void *dev_id)
+ 		epdc_eof_intr(false);
+ 		epdc_clear_eof_irq();
+ 		complete(&fb_data->eof_event);
++		if (fb_data->in_recovery)
++			return IRQ_HANDLED;
+ 	}
+ 
+ 	/*
+@@ -4480,6 +4553,263 @@ static const struct of_device_id imx_epdc_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, imx_epdc_dt_ids);
+ 
++static void drop_all_upates(struct mxc_epdc_fb_data *fb_data)
++{
++	struct update_data_list *collision_update, *temp_update;
++	struct update_marker_data *next_marker, *temp_marker;
++	struct update_desc_list *next_desc, *temp_desc;
++
++	struct update_data_list *plist;
++	int colli_count = 0, free_count = 0;;
++
++	list_for_each_entry(plist, &fb_data->upd_buf_free_list, list)
++		free_count++;
++
++	/* Clean-up collision list */
++	list_for_each_entry_safe(collision_update, temp_update,
++		&fb_data->upd_buf_collision_list, list) {
++
++		dev_dbg(fb_data->dev, "Flushing collision update!\n");
++		if (collision_update->update_desc) {
++			list_del_init(&collision_update->update_desc->list);
++			kfree(collision_update->update_desc);
++		}
++		collision_update->update_desc = NULL;
++		list_del_init(&collision_update->list);
++		/* Add to free buffer list */
++		list_add_tail(&collision_update->list,
++			&fb_data->upd_buf_free_list);
++		colli_count++;
++	}
++
++	/* clean-up pending update list */
++	list_for_each_entry_safe(next_desc, temp_desc,
++		&fb_data->upd_pending_list, list) {
++		list_del_init(&next_desc->list);
++		kfree(next_desc);
++	}
++	/* Clean-up current update and any queued in upd_buf_queue */
++	if (fb_data->cur_update == NULL) {
++		/* Process next item in update list */
++		if (!list_empty(&fb_data->upd_buf_queue)) {
++			fb_data->cur_update =
++				list_entry(fb_data->upd_buf_queue.next,
++					struct update_data_list, list);
++			list_del_init(&fb_data->cur_update->list);
++		}
++	}
++	while (fb_data->cur_update != NULL) {
++
++		list_for_each_entry_safe(next_marker, temp_marker,
++			&fb_data->cur_update->update_desc->upd_marker_list,
++			upd_list) {
++
++			/* Del from per-update & full list */
++			list_del_init(&next_marker->upd_list);
++			list_del_init(&next_marker->full_list);
++
++			/* Signal completion of update */
++			dev_info(fb_data->dev,
++				"Signaling marker (cancelled) %d\n",
++				next_marker->update_marker);
++			kfree(next_marker);
++		}
++
++		/* Free marker list and update descriptor */
++		kfree(fb_data->cur_update->update_desc);
++		fb_data->cur_update->update_desc = NULL;
++		/* Add to free buffer list */
++		list_add_tail(&fb_data->cur_update->list,
++				&fb_data->upd_buf_free_list);
++		/* Process next item in update list */
++		if (!list_empty(&fb_data->upd_buf_queue)) {
++			fb_data->cur_update =
++				list_entry(fb_data->upd_buf_queue.next,
++						struct update_data_list, list);
++			list_del_init(&fb_data->cur_update->list);
++		}
++		else {
++			/* Clear current update */
++			fb_data->cur_update = NULL;
++		}
++	}
++
++	/* Clean-up full_marker_list */
++	list_for_each_entry_safe(next_marker, temp_marker,
++			&fb_data->full_marker_list,
++			full_list) {
++
++		/* Found marker to signal - remove from list */
++		list_del_init(&next_marker->full_list);
++
++		/* Signal completion of update */
++		dev_info(fb_data->dev, "Signaling marker %d\n",
++			next_marker->update_marker);
++		if (next_marker->waiting)
++			complete(&next_marker->update_completion);
++		else
++			kfree(next_marker);
++	}
++	dev_dbg(fb_data->dev, "cur_update 0x%p, free %d, colli %d\n",
++			fb_data->cur_update,
++			free_count,
++			colli_count);
++}
++
++/* routine to recover EPDC */
++static void epdc_recover(struct mxc_epdc_fb_data *fb_data)
++{
++	struct mxcfb_update_data update;
++	int ret = 0;
++	struct clk * pixel_clk_src;
++	int i;
++
++	dev_info(fb_data->dev, "In epdc_recover routine.\n");
++
++	if (fb_data->in_recovery) {
++		return;
++	}
++
++	fb_data->is_drop_updates = true;
++
++	pixel_clk_src = clk_get(fb_data->dev, "epdc_pix_podf");
++	if (IS_ERR(pixel_clk_src)) {
++		dev_info(fb_data->dev, "Unable to get EPDC pixel source clk."
++			"err = %d\n", (int)pixel_clk_src);
++	}
++
++	/* disable IRQ and stop receiving updates */
++	disable_irq(fb_data->epdc_irq);
++	fb_data->in_recovery = true;
++
++	/* Enable clocks to access EPDC regs */
++	clk_prepare_enable(fb_data->epdc_clk_axi);
++	clk_prepare_enable(fb_data->epdc_clk_pix);
++
++	dev_err(fb_data->dev, "Before EPDC reset\n");
++	dump_epdc_reg();
++	dev_info(fb_data->dev, " LUT_status=0x%08x/0x%08x\n",
++		__raw_readl(EPDC_STATUS_LUTS), __raw_readl(EPDC_STATUS_LUTS2));
++
++	/* lock queues */
++	mutex_lock(&fb_data->queue_mutex);
++	/* check if TCE is still running using FRAME_END IRQ */
++	init_completion(&fb_data->eof_event);
++	__raw_writel(EPDC_IRQ_FRAME_END_IRQ, EPDC_IRQ_MASK);
++	__raw_writel(0xFFFFFFFF, EPDC_IRQ_MASK1_CLEAR);
++	__raw_writel(0xFFFFFFFF, EPDC_IRQ_MASK2_CLEAR);
++	enable_irq(fb_data->epdc_irq);
++
++	ret = wait_for_completion_timeout(&fb_data->eof_event,
++		msecs_to_jiffies(50));
++	if (!ret) {
++		dev_info(fb_data->dev, "TCE is not active.!\n");
++	} else {
++		/* TCE is active so don't reset during VSHOLD_OFF period */
++		udelay(fb_data->eof_sync_period);
++	}
++	disable_irq(fb_data->epdc_irq);
++
++	if (!IS_ERR(pixel_clk_src)) {
++		clk_disable_unprepare(pixel_clk_src);
++	}
++
++	/* Hold EPDC under Reset until we clean-up */
++	__raw_writel(EPDC_CTRL_SFTRST | EPDC_CTRL_CLKGATE, EPDC_CTRL_SET);
++
++	/* Disable clock */
++	clk_disable_unprepare(fb_data->epdc_clk_axi);
++	clk_disable_unprepare(fb_data->epdc_clk_pix);
++
++	drop_all_upates(fb_data);
++
++	/* set flags appropriate state */
++	fb_data->order_cnt = 0;
++	fb_data->updates_active = false;
++	fb_data->luts_complete_wb = ~(0x0ull);
++
++	for (i = 0; i < fb_data->num_luts; i++)
++		fb_data->lut_update_order[i] = 0;
++	fb_data->epdc_colliding_luts = 0;
++
++	/* Signal completion if submit workqueue needs a LUT */
++	if (fb_data->waiting_for_lut ||  fb_data->waiting_for_wb) {
++		complete(&fb_data->update_res_free);
++		fb_data->waiting_for_lut = false;
++		fb_data->waiting_for_wb = false;
++	}
++
++	/* Signal completion if LUT15 free and is needed */
++	if (fb_data->waiting_for_lut15) {
++		complete(&fb_data->lut15_free);
++		fb_data->waiting_for_lut15 = false;
++	}
++	if (fb_data->waiting_for_idle) {
++		complete(&fb_data->updates_done);
++		fb_data->waiting_for_idle = false;
++	}
++
++	/* unlock queue */
++	mutex_unlock(&fb_data->queue_mutex);
++
++	if (!IS_ERR(pixel_clk_src)) {
++		clk_prepare_enable(pixel_clk_src);
++	}
++
++	/* recover HW - reset and init again */
++	epdc_init_settings(fb_data);
++
++	enable_irq(fb_data->epdc_irq);
++
++	/* Now, request full screen update */
++	memset(&update, 0x0, sizeof(struct mxcfb_update_data));
++	update.update_region.left = 0;
++	update.update_region.width = fb_data->epdc_fb_var.xres;
++	update.update_region.top = 0;
++	update.update_region.height = fb_data->epdc_fb_var.yres;
++	update.update_mode = UPDATE_MODE_FULL;
++	update.temp = TEMP_USE_AMBIENT;
++	update.waveform_mode = fb_data->wv_modes.mode_gc4;
++	update.update_marker = 0;
++	update.flags = 0;
++
++	mxc_epdc_fb_send_update(&update, (struct fb_info *)fb_data);
++
++	/* restore driver to operational state before returning */
++	fb_data->in_recovery = false;
++
++	fb_data->is_drop_updates = false;
++}
++
++static ssize_t store_reset(struct device *device,
++			     struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct fb_info *info = dev_get_drvdata(device);
++	struct mxc_epdc_fb_data *fb_data = (struct mxc_epdc_fb_data *)info;
++	epdc_recover(fb_data);
++	return count;
++}
++
++static ssize_t show_reset(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct fb_info *info = dev_get_drvdata(dev);
++	struct mxc_epdc_fb_data *fb_data = (struct mxc_epdc_fb_data *)info;
++	int count = 0;
++	struct update_data_list *plist;
++	//dump_epdc_reg();
++	dump_all_updates(fb_data);
++	/* Count buffers in free buffer list */
++	list_for_each_entry(plist, &fb_data->upd_buf_free_list, list)
++		count++;
++	dev_info(fb_data->dev, "Free list count: %d\n", count);
++	return 0;
++}
++
++static struct device_attribute epdc_attrs[] = {
++	__ATTR(reset, S_IRUGO|S_IWUSR, show_reset, store_reset),
++};
++
+ int mxc_epdc_fb_probe(struct platform_device *pdev)
+ {
+ 	int ret = 0;
+@@ -4933,6 +5263,9 @@ int mxc_epdc_fb_probe(struct platform_device *pdev)
+ 	if (device_create_file(info->dev, &fb_attrs[0]))
+ 		dev_err(&pdev->dev, "Unable to create file from fb_attrs\n");
+ 
++	if (device_create_file(&pdev->dev, &epdc_attrs[0]))
++		dev_err(&pdev->dev, "Unable to create file from epdc_attrs\n");
++
+ 	fb_data->cur_update = NULL;
+ 
+ 	mutex_init(&fb_data->queue_mutex);
+-- 
+2.14.2
+\end{minted}
+
+
+
+\chapter{xorg.conf}
+\label{xorg.conf}
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{text}
+Section "ServerLayout"
+        Identifier     "reMarkable Tablet RM100"
+        Screen      0  "Screen0"
+        InputDevice    "wacom" "CorePointer"
+EndSection
+
+Section "ServerFlags"
+    Option "BlankTime" "0"
+    Option "StandbyTime" "0"
+    Option "SuspendTime" "0"
+    Option "OffTime" "0"
+EndSection
+
+Section "Monitor"
+        Identifier "Monitor0"
+        DisplaySize 210 158 # mm, sets DPI
+	Modeline "1872x1404_30.00" 104.26 1872 1960 2152 2432 1404 1405 \
+                 1408 1429 -HSync +Vsync
+        Option "PreferredMode" "1872x1404_30.00"
+EndSection
+
+Section "Screen"
+        Identifier "Screen0"
+        Monitor "Monitor0"
+        Device "epdc0"
+        DefaultDepth 16
+        SubSection "Display"
+                Depth 16
+                Modes "1872x1404_30.00"
+        EndSubSection
+EndSection
+
+Section "Device"
+    Identifier "epdc0"
+    Driver "fbdev"
+    Option "fbdev" "/dev/fb0"
+    Option "Rotate" "CW"
+EndSection
+
+Section "InputDevice"
+    Identifier "wacom"
+    Driver "evdev"
+    Option "Protocol" "Auto"
+    Option "Device" "/dev/input/event0"
+    Option "SwapAxes" "1"
+    Option "InvertY" "1"
+EndSection
+
+Section "InputClass"
+    Identifier "touchscreen"
+    MatchIsTouchscreen "on"
+    MatchDevicePath "/dev/input/event1"
+    Driver "libinput"
+    Option "CalibrationMatrix" "-1 0 1 0 -1 1 0 0 1"  # Rot 180
+EndSection
+
+Section "InputClass"
+    Identifier "facialbuttons"
+    MatchIsKeyboard "on"
+    MatchDevicePath "/dev/input/event2"
+    Driver "libinput"
+EndSection
+\end{minted}
+
+
+
+
+\chapter{epdc-init-auto.c}
+\label{epdc-init-auto.c}
+
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{c}
+/*
+  epdc-init-auto.c
+  Initializes the EPDC framebuffer into a deferred-IO automatic-update
+  mode
+
+  Parabola-rM is a free operating system for the reMarakble tablet.
+  Copyright (C) 2020  Davis Remmel
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include "mxcfb.h"
+#include <stdio.h>
+
+int main()
+{
+	int ret;
+	int fb = open("/dev/fb0", O_RDWR);
+	struct fb_var_screeninfo vinfo;
+	ret = ioctl(fb, FBIOGET_VSCREENINFO, &vinfo);
+	if (0 != ret) {
+		fprintf(stderr, "FBIOGET_VSCREENINFO failed with error "
+			"%d, aborting\n", ret);
+		return 1;
+	}
+
+	vinfo.xres = 1872;
+	vinfo.yres = 1404;
+	vinfo.pixclock = 160000000;
+	vinfo.left_margin = 32;
+	vinfo.right_margin = 326;
+	vinfo.upper_margin = 4;
+	vinfo.lower_margin = 12;
+	vinfo.hsync_len = 44;
+	vinfo.vsync_len = 1;
+	vinfo.sync = 0;
+	vinfo.vmode = FB_VMODE_NONINTERLACED;
+	vinfo.accel_flags = 0;
+	vinfo.activate = FB_ACTIVATE_FORCE;
+
+	// Put screen info. Sometimes this fails when trying to set the
+	// pixclock. This may be a bug in the driver's arithmetic.
+	ret = ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+	if (0 != ret) {
+		fprintf(stderr, "FBIOPUT_VSCREENINFO failed with error "
+			"%d, attempting to reset pixclock\n", ret);
+		vinfo.pixclock = 6250;
+		ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+		vinfo.pixclock = 160000000;
+		ret = ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+		if (0 != ret) {
+		        fprintf(stderr, "FBIOPUT_VSCREENINFO failed "
+				"with error %d, aborting\n", ret);
+			return 1;
+		}
+	}
+
+	// Pull the screeninfo agian
+	ret = ioctl(fb, FBIOGET_VSCREENINFO, &vinfo);
+	if (0 != ret) {
+	        fprintf(stderr, "FBIOGET_VSCREENINFO failed with error "
+			"%d, aborting\n", ret);
+		return 1;
+	}
+
+	printf("x:%d y:%d activate:%d bpp:%d rotate:%d hsync_len:%d"
+	       "vsync_len: %d sync:%d\n",
+	       vinfo.xres, vinfo.yres, vinfo.activate,
+	       vinfo.bits_per_pixel, vinfo.rotate, vinfo.hsync_len,
+	       vinfo.vsync_len, vinfo.sync);
+
+	struct fb_fix_screeninfo finfo;
+	ret = ioctl(fb, FBIOGET_FSCREENINFO, &finfo);
+	if (0 != ret) {
+	        fprintf(stderr, "FBIOGET_FSCREENINFO failed with error "
+			"%d, aborting\n", ret);
+		return 1;
+	}
+
+	// In case the EPDC wasn't accessible
+	ret = ioctl(fb, MXCFB_ENABLE_EPDC_ACCESS);
+	if (0 != ret) {
+	        fprintf(stderr, "MXCFB_ENABLE_EPDC_ACCESS failed with "
+			"error %d, aborting\n", ret);
+		return 1;
+	}
+
+	// Set auto update mode
+	__u32 aumode = AUTO_UPDATE_MODE_AUTOMATIC_MODE;
+	ret = ioctl(fb, MXCFB_SET_AUTO_UPDATE_MODE, &aumode);
+	if (0 != ret) {
+	        fprintf(stderr, "MXCFB_SET_AUTO_UPDATE_MODE failed "
+			"with error %d, aborting\n", ret);
+		return 1;
+	}
+
+	// Queue-and-merge is best-performing
+	__u32 uscheme = UPDATE_SCHEME_QUEUE_AND_MERGE;
+	ret = ioctl(fb, MXCFB_SET_UPDATE_SCHEME, &uscheme);
+	if (0 != ret) {
+	        fprintf(stderr, "MXCFB_SET_UPDATE_SCHEME failed with "
+			"error %d, aborting\n", ret);
+		return 1;
+	}
+
+	close(fb);
+	return 0;
+}
+
+\end{minted}
+
+
+
+
+
+\chapter{epdc-show-bitmap.c}
+\label{epdc-show-bitmap.c}
+
+\begin{minted}[
+  mathescape,
+  linenos,
+  numbersep=5pt,
+  gobble=0,
+  frame=lines,
+  framesep=2mm,
+  fontsize=\footnotesize]{c}
+/*
+  epdc-show-bitmap.c
+  Displays a raw image to the EPDC framebuffer
+
+  Parabola-rM is a free operating system for the reMarakble tablet.
+  Copyright (C) 2020  Davis Remmel
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include "mxcfb.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[])
+{
+	if (argc < 2) {
+		printf("Must pass an image as an argument.\n");
+		return 1;
+	}
+
+	int ret;
+	int fb = open("/dev/fb0", O_RDWR);
+	struct fb_var_screeninfo vinfo;
+	ret = ioctl(fb, FBIOGET_VSCREENINFO, &vinfo);
+	if (0 != ret) {
+		printf("FBIOGET_VSCREENINFO failed with error %d"
+		       ", aborting\n", ret);
+		return 1;
+	}
+	
+	vinfo.xres = 1872;
+	vinfo.yres = 1404;
+	vinfo.pixclock = 160000000;
+	vinfo.left_margin = 32;
+	vinfo.right_margin = 326;
+	vinfo.upper_margin = 4;
+	vinfo.lower_margin = 12;
+	vinfo.hsync_len = 44;
+	vinfo.vsync_len = 1;
+	vinfo.sync = 0;
+	vinfo.vmode = FB_VMODE_NONINTERLACED;
+	vinfo.accel_flags = 0;
+	vinfo.activate = FB_ACTIVATE_FORCE;
+
+	// Put screen info. Sometimes this fails when trying to set the
+	// pixclock. This may be a bug in the driver's arithmetic.
+	ret = ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+	if (0 != ret) {
+		fprintf(stderr, "FBIOPUT_VSCREENINFO failed with error "
+			"%d, attempting To reset pixclock\n", ret);
+		vinfo.pixclock = 6250;
+		ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+		vinfo.pixclock = 160000000;
+		ret = ioctl(fb, FBIOPUT_VSCREENINFO, &vinfo);
+		if (0 != ret) {
+			fprintf(stderr, "FBIOPUT_VSCREENINFO failed "
+				"with error %d, aborting\n", ret);
+			return 1;
+		}
+	}
+
+	printf("x:%d y:%d activate:%d bpp:%d rotate:%d hsync_len:%d"
+	       "vsync_len: %d sync:%d\n",
+	       vinfo.xres, vinfo.yres, vinfo.activate,
+	       vinfo.bits_per_pixel, vinfo.rotate, vinfo.hsync_len,
+	       vinfo.vsync_len, vinfo.sync);
+
+	struct fb_fix_screeninfo finfo;
+	ret = ioctl(fb, FBIOGET_FSCREENINFO, &finfo);
+	if (0 != ret) {
+		fprintf(stderr, "FBIOGET_FSCREENINFO failed with error "
+			"%d, aborting\n", ret);
+		return 1;
+	}
+
+	// In case the EPDC wasn't accessible
+	ret = ioctl(fb, MXCFB_ENABLE_EPDC_ACCESS);
+	if (0 != ret) {
+		fprintf(stderr, "MXCFB_ENABLE_EPDC_ACCESS failed with "
+			"error %d, aborting\n", ret);
+		return 1;
+	}
+
+	// Set to partial mode to control update parameters
+	__u32 aumode = AUTO_UPDATE_MODE_REGION_MODE;
+	ret = ioctl(fb, MXCFB_SET_AUTO_UPDATE_MODE, &aumode);
+	if (0 != ret) {
+	        fprintf(stderr, "MXCFB_SET_AUTO_UPDATE_MODE failed "
+			"with error %d, aborting\n", ret);
+		return 1;
+	}
+
+	// No artifacts in display output
+	__u32 uscheme = UPDATE_SCHEME_SNAPSHOT;
+	ret = ioctl(fb, MXCFB_SET_UPDATE_SCHEME, &uscheme);
+	if (0 != ret) {
+		fprintf(stderr, "MXCFB_SET_UPDATE_SCHEME failed with "
+			"error %d, aborting\n", ret);
+		return 1;
+	}
+
+	// Set up update (same region for all writes, gets reused)
+	struct mxcfb_update_data bupdate;
+	bupdate.update_region.left = 0;
+	bupdate.update_region.top = 0;
+	bupdate.update_region.width = 1872;
+	bupdate.update_region.height = 1404;
+	bupdate.waveform_mode = WAVEFORM_MODE_AUTO;
+	bupdate.update_mode = UPDATE_MODE_FULL;
+	bupdate.update_marker = 0;
+	bupdate.temp = TEMP_USE_AMBIENT;
+	bupdate.flags = 0;
+    
+	struct mxcfb_update_marker_data updm;
+	updm.update_marker = 0;
+
+	// mmap to framebuffer
+	int buflength = vinfo.yres_virtual * finfo.line_length;
+	printf("buflength %d\n", buflength);
+	char * region = mmap(0, buflength, PROT_READ | PROT_WRITE,
+			     MAP_SHARED, fb, (off_t)0);
+	if (region == MAP_FAILED) {
+		fprintf(stderr, "map failed!\n");
+		return 1;
+	}
+
+	// Write black
+	memset(region, 0x00, buflength);
+	ioctl(fb, MXCFB_SEND_UPDATE, &bupdate);
+	ioctl(fb, MXCFB_WAIT_FOR_UPDATE_COMPLETE, &updm);
+
+	// Write white
+	memset(region, 0xff, buflength);
+	ioctl(fb, MXCFB_SEND_UPDATE, &bupdate);
+	ioctl(fb, MXCFB_WAIT_FOR_UPDATE_COMPLETE, &updm);
+
+	// Write image
+	FILE *pattern = fopen(argv[1], "rb");
+	fseek(pattern, 0, SEEK_END);
+	long psize = ftell(pattern);
+	printf("psize is %d\n", psize);
+	fseek(pattern, 0, SEEK_SET);
+	
+	if (psize != buflength) {
+		fprintf(stderr, "Image must match framebuffer size\n");
+		return 1;
+	}
+
+	char *buffer = malloc(psize);
+	fread(buffer, psize, 1, pattern);
+	fclose(pattern);
+
+	memcpy(region, buffer, psize);
+	ret = ioctl(fb, MXCFB_SEND_UPDATE, &bupdate);
+	ioctl(fb, MXCFB_WAIT_FOR_UPDATE_COMPLETE, &updm);
+	if (0 != ret) {
+		fprintf(stderr, "MXCFB_SEND_UPDATE failed with error "
+			"%d, aborting\n", ret);
+		return 1;
+	}
+
+	close(fb);
+	return 0;
+}
+
+\end{minted}
+
+
+
+
+
+
+\end{document}
