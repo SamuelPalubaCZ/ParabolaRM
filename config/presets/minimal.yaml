@@ -1,0 +1,175 @@
+# Minimal configuration for Parabola RM Builder
+# This configuration uses minimal settings for a basic installation
+
+# Cross-Compilation Environment Configuration
+cross_compilation:
+  # Use containerized environment for isolation
+  environment_type: container
+  
+  # Use the latest toolchain
+  toolchain_version: latest
+  
+  # Container configuration
+  container:
+    # Use a minimal base image
+    base_image: debian:bullseye-slim
+    
+    # Minimal resource limits
+    resource_limits:
+      cpu: 2
+      memory: 2g
+  
+  # Build configuration
+  build:
+    # Use fewer parallel jobs for resource-constrained systems
+    parallel_jobs: 2
+    
+    # Enable compiler cache for faster rebuilds
+    use_ccache: true
+
+# Hardware Configuration
+hardware:
+  # Target the reMarkable 1 tablet
+  tablet_model: rm1
+
+# Partition Configuration
+partition:
+  # Minimal partition layout
+  layout:
+    # Minimal FAT partition size
+    fat_size: 16
+    
+    # Minimal system partition size
+    system_size: 1
+    
+    # Use remaining space for home partition
+    home_size: 0
+
+# Bootloader Configuration
+bootloader:
+  # Basic boot parameters
+  boot_params:
+    console: ttymxc0
+    baudrate: 115200
+    root_device: /dev/mmcblk1p2
+    additional_params: "rootwait rootfstype=ext4 rw"
+
+# Kernel Configuration
+kernel:
+  # Driver options
+  drivers:
+    # EPDC driver settings
+    epdc:
+      # Enable automatic partial refreshing for better performance
+      auto_partial_refresh: true
+      
+      # Enable REAGL waveforms to minimize ghosting
+      enable_reagl: true
+    
+    # USB communication options
+    usb:
+      # Enable USB ACM for serial communication
+      enable_acm: true
+      
+      # Enable USB CDC composite for network
+      enable_cdc_composite: true
+  
+  # Hardware support
+  hardware_support:
+    # Disable Wi-Fi support (requires proprietary firmware)
+    wifi_support: false
+    
+    # Enable power management
+    power_management: true
+
+# System Configuration
+system:
+  # Network settings
+  network:
+    # USB networking
+    usb_networking:
+      # Enable USB networking
+      enable: true
+      
+      # Static IP address for the tablet
+      ip_address: 10.11.99.1
+      
+      # Network mask
+      netmask: 255.255.255.0
+    
+    # DHCP server configuration
+    dhcp_server:
+      # Enable DHCP server
+      enable: true
+      
+      # DHCP range
+      range_start: 10.11.99.2
+      range_end: 10.11.99.253
+      
+      # Lease time in minutes
+      lease_time: 10
+  
+  # System services
+  services:
+    # Auto-start services
+    auto_start:
+      - systemd-networkd
+      - dnsmasq
+    
+    # Shutdown handling
+    shutdown:
+      # Enable graceful shutdown
+      enable_graceful_shutdown: true
+      
+      # Show splash screen on shutdown
+      show_splash_on_shutdown: true
+
+# Desktop Environment Configuration
+desktop:
+  # Use Xfce as the desktop environment
+  environment: xfce
+  
+  # UI customization
+  ui:
+    # Use high contrast theme for better visibility on e-paper
+    theme: High Contrast
+    
+    # Use high contrast icons for better visibility on e-paper
+    icon_theme: High Contrast
+    
+    # Font settings
+    font:
+      # Use system font
+      default_font: System-ui Regular
+      
+      # Disable anti-aliasing for sharper text on e-paper
+      disable_antialiasing: true
+    
+    # E-paper optimizations
+    epaper_optimizations:
+      # Disable overlay scrolling for better visibility
+      disable_overlay_scrolling: true
+      
+      # Disable button images for better visibility
+      disable_button_images: true
+      
+      # Disable menu images for better visibility
+      disable_menu_images: true
+      
+      # Disable shadows for better visibility
+      disable_shadows: true
+  
+  # Input methods
+  input:
+    # Virtual keyboard
+    virtual_keyboard:
+      # Enable virtual keyboard
+      enable: true
+      
+      # Use Onboard as the virtual keyboard
+      type: onboard
+    
+    # Stylus configuration
+    stylus:
+      # Enable stylus
+      enable: true

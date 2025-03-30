@@ -1,0 +1,12 @@
+This is a placeholder for the splash screen image.
+
+In a real implementation, this would be a 16-color grayscale BMP file
+with dimensions matching the reMarkable tablet's screen (1404x1872 pixels).
+
+The splash screen is displayed during boot and shutdown.
+
+To create a real splash screen:
+1. Create a 1404x1872 pixel image
+2. Convert it to 16-color grayscale
+3. Save it as a BMP file
+4. Place it in this directory as splash.bmp
